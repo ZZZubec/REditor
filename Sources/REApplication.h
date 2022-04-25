@@ -31,23 +31,28 @@ private:
 
     /// Creates a scene. Only required to provide background color that is not black.
     void CreateScene();
-
+    
     /// Subscribe to application-wide logic update events.
     void SubscribeToEvents();
-    /// Assemble debug UI and handle UI events.
-    void RenderUi(StringHash eventType, VariantMap& eventData);
+    
     void ReadFile(ea::string Filename);
     void Dump(ea::string Path, const XMLElement element);
     /// Process key events like opening a console window.
     void HandleKeyDown(StringHash eventType, VariantMap& eventData);
     
     /// Animate cube, handle keys.
-    void OnUpdate(StringHash, VariantMap&);
+    void OnUpdate(StringHash, VariantMap& eventData);
+
+    void MoveCamera(float deltaTime);
+    /// Assemble debug UI and handle UI events.
+    void RenderUi(float deltaTime);
 
     void InitMouseMode(MouseMode mode);
 
     void HandleMouseModeRequest(StringHash /*eventType*/, VariantMap& eventData);
     void HandleMouseModeChange(StringHash /*eventType*/, VariantMap& eventData);
+
+    void HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData);
 
     /// Scene.
     SharedPtr<Scene> scene_;
@@ -66,4 +71,10 @@ private:
     MouseMode useMouseMode_;
 
     XMLFile* xml_file_;
+
+    float yaw_;
+    /// Camera pitch angle.
+    float pitch_;
+
+    bool drawDebug_;
 };

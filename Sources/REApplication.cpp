@@ -21,9 +21,13 @@
 #include "PugiXml/pugixml.hpp"
 
 #include "Structures.h"
+#include "Graphics/DebugRenderer.h"
+#include "UI/UI.h"
 
 REApplication::REApplication(Urho3D::Context* context)
-    : Application(context)
+    : Application(context),
+    yaw_(0.0f),
+    pitch_(0.0f)
 {
 }
 
@@ -55,7 +59,7 @@ void REApplication::Start()
     SubscribeToEvents();
 
     // Set the mouse mode to use in the sample
-    InitMouseMode(Urho3D::MM_FREE);
+    InitMouseMode(Urho3D::MM_RELATIVE);
 
     // Pass console commands to file system.
     GetSubsystem<FileSystem>()->SetExecuteConsoleCommands(true);
@@ -80,7 +84,12 @@ void REApplication::Stop()
 void REApplication::SubscribeToEvents()
 {
     SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(REApplication, HandleKeyDown));
-    SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(REApplication, RenderUi));
+    SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(REApplication, OnUpdate));
+    SubscribeToEvent(E_MOUSEBUTTONDOWN, URHO3D_HANDLER(REApplication, HandleMouseModeRequest));
+
+    // Subscribe HandlePostRenderUpdate() function for processing the post-render update event, during which we request
+    // debug geometry
+    SubscribeToEvent(E_POSTRENDERUPDATE, URHO3D_HANDLER(REApplication, HandlePostRenderUpdate));
 }
 
 void REApplication::CreateScene()
@@ -95,6 +104,7 @@ void REApplication::CreateScene()
     // Create the Octree component to the scene so that drawable objects can be rendered. Use default volume
     // (-1000, -1000, -1000) to (1000, 1000, 1000)
     scene_->CreateComponent<Octree>();
+    scene_->CreateComponent<DebugRenderer>();
 
     // Create a Zone component into a child scene node. The Zone controls ambient lighting and fog settings. Like the Octree,
     // it also defines its volume with a bounding box, but can be rotated (so it does not need to be aligned to the world X, Y
@@ -110,10 +120,13 @@ void REApplication::CreateScene()
 
     cameraNode_ = scene_->CreateChild("Camera");
     auto camera = cameraNode_->CreateComponent<Camera>();
+    camera->SetFarClip(300.0f);
     GetSubsystem<Renderer>()->SetViewport(0, new Viewport(context_, scene_, camera));
+    cameraNode_->SetPosition(Vector3(0.0f, 5.0f, -5.0f));
+    cameraNode_->SetDirection(Vector3(-0.01f, -0.7, 0.6f));
 
     boxNode_ = scene_->CreateChild("Box");
-    boxNode_->SetPosition(cameraNode_->LocalToWorld(Vector3::FORWARD * 3.0f));
+    boxNode_->SetPosition(Vector3::ZERO);
     const auto staticModel = boxNode_->CreateComponent<StaticModel>();
     staticModel->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
     staticModel->SetMaterial(cache_->GetResource<Material>("Materials/DefaultGrey.xml"));
@@ -121,43 +134,6 @@ void REApplication::CreateScene()
     gizmo_ = MakeShared<Gizmo>(context_);
 
     //this->ReadFile("Scenes/RenderingShowcase_2_BakedDirect.xml");
-}
-
-void REApplication::RenderUi(StringHash eventType, VariantMap& eventData)
-{
-    gizmo_->ManipulateNode(cameraNode_->GetComponent<Camera>(), boxNode_);
-
-    ui::SetNextWindowSize(ImVec2(200, 300), ImGuiCond_FirstUseEver);
-    ui::SetNextWindowPos(ImVec2(200, 300), ImGuiCond_FirstUseEver);
-    if (ui::Begin("Sample SystemUI", 0, ImGuiWindowFlags_NoSavedSettings))
-    {
-        if (messageBox_)
-        {
-            if (ui::Button("Close message box"))
-                messageBox_ = nullptr;
-        }
-        else
-        {
-            if (ui::Button("Show message box"))
-            {
-                messageBox_ = new SystemMessageBox(context_, "Hello from SystemUI", "Sample Message Box");
-                SubscribeToEvent(E_MESSAGEACK, [&](StringHash, VariantMap&) {
-                    messageBox_ = nullptr;
-                });
-            }
-        }
-
-        if (ui::Button("Toggle console"))
-            GetSubsystem<Console>()->Toggle();
-
-        if (ui::Button("Toggle metrics window"))
-            metricsOpen_ ^= true;
-
-        gizmo_->RenderUI();
-    }
-    ui::End();
-    if (metricsOpen_)
-        ui::ShowMetricsWindow(&metricsOpen_);
 }
 
 void REApplication::ReadFile(const ea::string Filename)
@@ -267,6 +243,94 @@ void REApplication::HandleKeyDown(StringHash eventType, VariantMap& eventData)
     }
 }
 
+void REApplication::OnUpdate(StringHash, VariantMap& eventData)
+{
+    float deltaTime = eventData[Update::P_TIMESTEP].GetFloat();
+
+    MoveCamera(deltaTime);
+    RenderUi(deltaTime);
+}
+
+void REApplication::MoveCamera(float deltaTime)
+{
+    if (GetSubsystem<UI>()->GetFocusElement())
+        return;
+
+    auto* input = GetSubsystem<Input>();
+
+    // Movement speed as world units per second
+    const float MOVE_SPEED = 20.0f;
+    // Mouse sensitivity as degrees per pixel
+    const float MOUSE_SENSITIVITY = 0.1f;
+
+    // Use this frame's mouse motion to adjust camera node yaw and pitch. Clamp the pitch between -90 and 90 degrees
+    IntVector2 mouseMove = input->GetMouseMove();
+    if(useMouseMode_ == MouseMode::MM_RELATIVE)
+    {
+        yaw_ += MOUSE_SENSITIVITY * mouseMove.x_;
+        pitch_ += MOUSE_SENSITIVITY * mouseMove.y_;
+        pitch_ = Clamp(pitch_, -90.0f, 90.0f);
+
+        // Construct new orientation for the camera scene node from yaw and pitch. Roll is fixed to zero
+        cameraNode_->SetRotation(Quaternion(pitch_, yaw_, 0.0));
+        
+
+        // Read WASD keys and move the camera scene node to the corresponding direction if they are pressed
+        if (input->GetKeyDown(KEY_W))
+            cameraNode_->Translate(Vector3::FORWARD * MOVE_SPEED * deltaTime);
+        if (input->GetKeyDown(KEY_S))
+            cameraNode_->Translate(Vector3::BACK * MOVE_SPEED * deltaTime);
+        if (input->GetKeyDown(KEY_A))
+            cameraNode_->Translate(Vector3::LEFT * MOVE_SPEED * deltaTime);
+        if (input->GetKeyDown(KEY_D))
+            cameraNode_->Translate(Vector3::RIGHT * MOVE_SPEED * deltaTime);
+
+        // Toggle debug geometry with space
+        if (input->GetKeyPress(KEY_SPACE))
+            drawDebug_ = !drawDebug_;
+    }
+}
+
+void REApplication::RenderUi(float deltaTime)
+{
+    gizmo_->ManipulateNode(cameraNode_->GetComponent<Camera>(), boxNode_);
+
+    ui::SetNextWindowSize(ImVec2(200, 300), ImGuiCond_FirstUseEver);
+    ui::SetNextWindowPos(ImVec2(200, 300), ImGuiCond_FirstUseEver);
+    if (ui::Begin("Sample SystemUI", 0, ImGuiWindowFlags_NoSavedSettings))
+    {
+        if (messageBox_)
+        {
+            if (ui::Button("Close message box"))
+                messageBox_ = nullptr;
+        }
+        else
+        {
+            if (ui::Button("Show message box"))
+            {
+                messageBox_ = new SystemMessageBox(context_, "Hello from SystemUI", "Sample Message Box");
+                SubscribeToEvent(E_MESSAGEACK, [&](StringHash, VariantMap&) {
+                    messageBox_ = nullptr;
+                });
+            }
+        }
+
+        if (ui::Button("Toggle console"))
+            GetSubsystem<Console>()->Toggle();
+
+        if (ui::Button("Toggle metrics window"))
+            metricsOpen_ ^= true;
+        
+        ui::Text(cameraNode_->GetPosition().ToString().c_str());
+        ui::Text(cameraNode_->GetDirection().ToString().c_str());
+
+        gizmo_->RenderUI();
+    }
+    ui::End();
+    if (metricsOpen_)
+        ui::ShowMetricsWindow(&metricsOpen_);
+}
+
 void REApplication::InitMouseMode(MouseMode mode)
 {
     useMouseMode_ = mode;
@@ -295,7 +359,7 @@ void REApplication::InitMouseMode(MouseMode mode)
         SubscribeToEvent(Urho3D::E_MOUSEMODECHANGED, URHO3D_HANDLER(REApplication, HandleMouseModeChange));
     }
 
-    SubscribeToEvent(Urho3D::E_MOUSEBUTTONDOWN, URHO3D_HANDLER(REApplication, HandleMouseModeRequest));
+    //SubscribeToEvent(Urho3D::E_MOUSEBUTTONDOWN, URHO3D_HANDLER(REApplication, HandleMouseModeRequest));
 }
 
 void REApplication::HandleMouseModeRequest(StringHash, VariantMap& eventData)
@@ -307,24 +371,21 @@ void REApplication::HandleMouseModeRequest(StringHash, VariantMap& eventData)
 #endif
     Urho3D::Input* input = GetSubsystem<Urho3D::Input>();
 
-    unsigned buttonID = eventData["Button"].GetInt();
+    unsigned buttonID = eventData[MouseButtonDown::P_BUTTON].GetInt();
+    URHO3D_LOGINFO("mouse:{}", buttonID);
     if(buttonID == 4)
     {
-        if(useMouseMode_ == Urho3D::MM_ABSOLUTE)
+        if(useMouseMode_ != Urho3D::MM_FREE)
         {
             useMouseMode_ = Urho3D::MM_FREE;
         }
         else
         {
-            useMouseMode_ = Urho3D::MM_ABSOLUTE;
+            useMouseMode_ = Urho3D::MM_RELATIVE;
         }
+        InitMouseMode(useMouseMode_);
     }
-
-    if (useMouseMode_ == Urho3D::MM_ABSOLUTE)
-        input->SetMouseVisible(false);
-    else if (useMouseMode_ == Urho3D::MM_FREE)
-        input->SetMouseVisible(true);
-    input->SetMouseMode(useMouseMode_);
+    /**/
 }
 
 void REApplication::HandleMouseModeChange(StringHash, VariantMap& eventData)
@@ -332,6 +393,26 @@ void REApplication::HandleMouseModeChange(StringHash, VariantMap& eventData)
     Urho3D::Input* input = GetSubsystem<Urho3D::Input>();
     bool mouseLocked = eventData[Urho3D::MouseModeChanged::P_MOUSELOCKED].GetBool();
     input->SetMouseVisible(!mouseLocked);
+}
+
+void REApplication::HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData)
+{
+    // If draw debug mode is enabled, draw viewport debug geometry. This time use depth test, as otherwise the result becomes
+    // hard to interpret due to large object count
+    if (drawDebug_)
+        GetSubsystem<Renderer>()->DrawDebugGeometry(true);
+
+    DebugRenderer* dbgRenderer = scene_->GetComponent<DebugRenderer>();
+    if(dbgRenderer)
+    {
+        for( unsigned x = 0; x <= 10; ++x)
+        {
+            for( unsigned z = 0; z <= 10; ++z)
+            {
+                dbgRenderer->AddQuad(Vector3(0.5f*x, 0, 0.5f*z), 1.0f, 1.0f, Color::BLACK, true);
+            }
+        }
+    }
 }
 
 

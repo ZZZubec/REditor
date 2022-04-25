@@ -16,10 +16,8 @@ set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 # Include cloned engine directory in a build.
 add_subdirectory(rbfx)
 
-file(GLOB Dir1_Sources RELATIVE "Sources" "*.cpp")
-
 # Define executable name.
-add_executable(REditor WIN32 Sources/REApplication.h Sources/REApplication.cpp ${Dir1_Sources})
+add_executable(REditor WIN32 Sources/REApplication.h Sources/REApplication.cpp Sources/Structures.h)
 
 # Link to game engine library.
 target_link_libraries(REditor Urho3D)

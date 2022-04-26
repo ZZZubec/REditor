@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\Sources\REApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\Sources\REApplication.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\Sources\Structures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{F34CFC0C-F47A-3434-A200-4D97B2E4E877}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{E608D8B9-6982-3B7D-A3F9-06FA2D47E603}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

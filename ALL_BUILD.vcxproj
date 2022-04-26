@@ -1,0 +1,422 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x86</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|win32">
+      <Configuration>Debug</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|win32">
+      <Configuration>Release</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{83B1F146-6D03-3C9C-B053-08E1C2734CC5}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>win32</Platform>
+    <ProjectName>ALL_BUILD</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|win32'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">Building Custom Rule K:/develop/salamandr.dev/Urcho_rbfx/REditor/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SK:/develop/salamandr.dev/Urcho_rbfx/REditor -BK:/develop/salamandr.dev/Urcho_rbfx/REditor --check-stamp-file K:/develop/salamandr.dev/Urcho_rbfx/REditor/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCCompilerABI.c;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeTestCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.21\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\WindowsPaths.cmake;K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\3.21.3\CMakeCCompiler.cmake;K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\3.21.3\CMakeCXXCompiler.cmake;K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\3.21.3\CMakeRCCompiler.cmake;K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\3.21.3\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|win32'">Building Custom Rule K:/develop/salamandr.dev/Urcho_rbfx/REditor/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|win32'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SK:/develop/salamandr.dev/Urcho_rbfx/REditor -BK:/develop/salamandr.dev/Urcho_rbfx/REditor --check-stamp-file K:/develop/salamandr.dev/Urcho_rbfx/REditor/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|win32'">C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCCompilerABI.c;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeTestCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.21\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\WindowsPaths.cmake;K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\3.21.3\CMakeCCompiler.cmake;K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\3.21.3\CMakeCXXCompiler.cmake;K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\3.21.3\CMakeRCCompiler.cmake;K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\3.21.3\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|win32'">K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">Building Custom Rule K:/develop/salamandr.dev/Urcho_rbfx/REditor/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SK:/develop/salamandr.dev/Urcho_rbfx/REditor -BK:/develop/salamandr.dev/Urcho_rbfx/REditor --check-stamp-file K:/develop/salamandr.dev/Urcho_rbfx/REditor/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCCompilerABI.c;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeTestCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.21\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.21\Modules\Platform\WindowsPaths.cmake;K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\3.21.3\CMakeCCompiler.cmake;K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\3.21.3\CMakeCXXCompiler.cmake;K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\3.21.3\CMakeRCCompiler.cmake;K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\3.21.3\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">K:\develop\salamandr.dev\Urcho_rbfx\REditor\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\ZERO_CHECK.vcxproj">
+      <Project>{D6CDA697-F3FB-390B-BD78-C0986894CA6E}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Samples\103_GamePlugin\103_GamePlugin.vcxproj">
+      <Project>{5F4E1FB8-E115-30F6-BCB0-78EA3AFD8D0E}</Project>
+      <Name>103_GamePlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Tools\AssetImporter\AssetImporter.vcxproj">
+      <Project>{8DC26617-2C85-386F-A94A-868E180B6E6F}</Project>
+      <Name>AssetImporter</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Tools\AssetViewer\AssetViewer.vcxproj">
+      <Project>{5C00B718-E9ED-3E88-930F-0DDB0C10BF89}</Project>
+      <Name>AssetViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\Assimp\code\Assimp.vcxproj">
+      <Project>{ACCCB4F0-A923-3E59-9096-7AEF5C218F55}</Project>
+      <Name>Assimp</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\Box2D\Box2D.vcxproj">
+      <Project>{46D3C5DF-46BB-3025-9268-C746230FD57F}</Project>
+      <Name>Box2D</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\Bullet\Bullet.vcxproj">
+      <Project>{134A972E-4DF8-3BA6-B4D7-652290020EAE}</Project>
+      <Name>Bullet</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\Civetweb\Civetweb.vcxproj">
+      <Project>{81BEA5A7-B10C-3F94-8953-2006BA5E449D}</Project>
+      <Name>Civetweb</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\Detour\Detour.vcxproj">
+      <Project>{04171F59-9A71-3C93-A71C-1D66A9B05A0C}</Project>
+      <Name>Detour</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\DetourCrowd\DetourCrowd.vcxproj">
+      <Project>{8670ACF6-8F08-33EA-B91D-507A78CBDB36}</Project>
+      <Name>DetourCrowd</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\DetourTileCache\DetourTileCache.vcxproj">
+      <Project>{142CA677-1158-3255-B5F1-EB803C928EA8}</Project>
+      <Name>DetourTileCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\EASTL\EASTL.vcxproj">
+      <Project>{4B9118D4-2215-3700-947F-44C25A1E3F88}</Project>
+      <Name>EASTL</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\ETCPACK\ETCPACK.vcxproj">
+      <Project>{DA2524FC-D9DB-3CA4-B018-78FF33BAC7F1}</Project>
+      <Name>ETCPACK</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Tools\Editor\Editor.vcxproj">
+      <Project>{8C81285C-74FF-357A-BCD3-C693E4BE2645}</Project>
+      <Name>Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\FreeType\FreeType.vcxproj">
+      <Project>{4679A5AE-591E-330B-A20B-7DD4E75A779F}</Project>
+      <Name>FreeType</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\GLEW\GLEW.vcxproj">
+      <Project>{68F16012-A2E2-3F51-BF94-E042589290E8}</Project>
+      <Name>GLEW</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\imgui\ImGui.vcxproj">
+      <Project>{3E71577B-BC39-39BB-A745-124F925C5452}</Project>
+      <Name>ImGui</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\LZ4\LZ4.vcxproj">
+      <Project>{33A5ED17-51C6-300C-A685-6135D2840512}</Project>
+      <Name>LZ4</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\LibCpuId\LibCpuId.vcxproj">
+      <Project>{A5DD2675-B402-3B71-BDE3-7F4B0C17C845}</Project>
+      <Name>LibCpuId</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\glslang\OGLCompilersDLL\OGLCompiler.vcxproj">
+      <Project>{15F98999-601D-3D38-B176-33F64370A16C}</Project>
+      <Name>OGLCompiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\glslang\glslang\OSDependent\Windows\OSDependent.vcxproj">
+      <Project>{578C7613-92EF-3981-8117-9BF5C8581CEF}</Project>
+      <Name>OSDependent</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Extras\OgreBatchConverter\OgreBatchConverter.vcxproj">
+      <Project>{14128943-4B29-31D7-BF1C-EB88E503012C}</Project>
+      <Name>OgreBatchConverter</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Tools\OgreImporter\OgreImporter.vcxproj">
+      <Project>{71416E4E-954E-3372-BD74-BACFFA291093}</Project>
+      <Name>OgreImporter</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Tools\PackageTool\PackageTool.vcxproj">
+      <Project>{DE23D058-F223-3548-AA98-B88B9DAC3E16}</Project>
+      <Name>PackageTool</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Player\Player.vcxproj">
+      <Project>{CDE5A8A0-0106-30CC-B9DF-F044F6980998}</Project>
+      <Name>Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\PugiXml\PugiXml.vcxproj">
+      <Project>{FC3BDFFE-A773-346E-9565-64F47F067B9A}</Project>
+      <Name>PugiXml</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\REditor.vcxproj">
+      <Project>{D878F8D2-A32E-38B2-8E3B-4EF39BA6F0D1}</Project>
+      <Name>REditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Tools\RampGenerator\RampGenerator.vcxproj">
+      <Project>{8CA266C8-31DF-3530-9BBE-DDE287E8AAFA}</Project>
+      <Name>RampGenerator</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\Recast\Recast.vcxproj">
+      <Project>{624852B1-4356-3489-9779-A3E853B7FF19}</Project>
+      <Name>Recast</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\RmlUi\RmlUi.vcxproj">
+      <Project>{AD223C3A-26AB-38BA-A875-57834A9D7249}</Project>
+      <Name>RmlUi</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\SDL\SDL.vcxproj">
+      <Project>{3934BD1C-D455-3058-BDF3-8418101D8E83}</Project>
+      <Name>SDL</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\SLikeNet\SLikeNet.vcxproj">
+      <Project>{B00A0AF3-CA35-3772-AE64-E9236C3D6B74}</Project>
+      <Name>SLikeNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\glslang\SPIRV\SPIRV.vcxproj">
+      <Project>{56B84C38-A259-334A-9488-AAB4F94F0313}</Project>
+      <Name>SPIRV</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\glslang\SPIRV\SPVRemapper.vcxproj">
+      <Project>{940AA3F5-A7DA-3B3C-9E75-8E2ABD23346A}</Project>
+      <Name>SPVRemapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\STB\STB.vcxproj">
+      <Project>{29857AFC-699A-35D8-87FF-FB2A043693FD}</Project>
+      <Name>STB</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Samples\Samples.vcxproj">
+      <Project>{E0D94EE6-2AE0-3130-99B4-9164AFA7A5B8}</Project>
+      <Name>Samples</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Tools\SpritePacker\SpritePacker.vcxproj">
+      <Project>{218FEBDE-85A5-31A9-A2EE-7DFFDF9A051B}</Project>
+      <Name>SpritePacker</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\StanHull\StanHull.vcxproj">
+      <Project>{5918A170-93B7-3FFF-BC11-D70BC192E913}</Project>
+      <Name>StanHull</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Tools\Toolbox\Toolbox.vcxproj">
+      <Project>{8754D7BB-B716-32EC-A4AB-8A3F66F1A9DD}</Project>
+      <Name>Toolbox</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\tracy\Tracy.vcxproj">
+      <Project>{1FA77D53-A66B-322F-B82C-3F65BBA22DF9}</Project>
+      <Name>Tracy</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\tracy\TracyEmbedded.vcxproj">
+      <Project>{5365AC13-434A-3FD1-AF2E-5CD02BC0989E}</Project>
+      <Name>TracyEmbedded</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\tracy\TracyProfiler.vcxproj">
+      <Project>{1542AD5D-C0C3-3329-AA96-B4ED5E2F1203}</Project>
+      <Name>TracyProfiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Urho3D\Urho3D.vcxproj">
+      <Project>{6144A86C-93F6-3343-B718-A4789B01D235}</Project>
+      <Name>Urho3D</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\Samples\Utilities2D\Utilities2D.vcxproj">
+      <Project>{CD744C17-1312-38A8-BC68-9375DF5608CE}</Project>
+      <Name>Utilities2D</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\WebP\WebP.vcxproj">
+      <Project>{AD10F7B1-8E65-31A7-BA0A-90DCD7F211BF}</Project>
+      <Name>WebP</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\embree\common\algorithms\algorithms.vcxproj">
+      <Project>{352EBFBA-3810-3082-9BD5-60B873A04090}</Project>
+      <Name>algorithms</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\capstone\capstone-static.vcxproj">
+      <Project>{1AB362CE-2BD6-3C57-9577-FCA42936BB7F}</Project>
+      <Name>capstone-static</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\crunch\crnlib.vcxproj">
+      <Project>{CF89308A-54D2-37E5-8AC5-03FB5EDBBFB6}</Project>
+      <Name>crnlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\crunch\crunch.vcxproj">
+      <Project>{C75592A5-5C9C-375C-84D9-7655C1A33AB9}</Project>
+      <Name>crunch</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\embree\kernels\embree.vcxproj">
+      <Project>{EA6EDB80-549A-3CB7-A16A-532C4215271A}</Project>
+      <Name>embree</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\fmt\fmt.vcxproj">
+      <Project>{9A9229C0-ED74-3232-9708-A2CC4C0C9151}</Project>
+      <Name>fmt</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\glslang\glslang\glslang.vcxproj">
+      <Project>{83A9977B-F99D-3699-9932-8A3DCC0AC073}</Project>
+      <Name>glslang</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\ik\ik.vcxproj">
+      <Project>{292FF87F-EFCB-3EBB-B499-A3540645DE02}</Project>
+      <Name>ik</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\embree\common\lexers\lexers.vcxproj">
+      <Project>{B48D6497-01C0-3ED1-9C3B-9B24D11AF21D}</Project>
+      <Name>lexers</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\embree\common\math\math.vcxproj">
+      <Project>{A4BEBCDB-07D0-3993-BC23-854E26CB2A0F}</Project>
+      <Name>math</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\nativefiledialog\nativefiledialog.vcxproj">
+      <Project>{53CC9C8A-7CDE-3A20-B3CC-CCDD0F134B73}</Project>
+      <Name>nativefiledialog</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\embree\common\simd\simd.vcxproj">
+      <Project>{9211059A-7B7D-37E6-AE9D-B20CE4B47976}</Project>
+      <Name>simd</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\SPIRV-Cross\spirv-cross.vcxproj">
+      <Project>{EB50C2AC-AFF0-31FF-88D9-BA514021A6D2}</Project>
+      <Name>spirv-cross</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\SPIRV-Cross\spirv-cross-c.vcxproj">
+      <Project>{C3BDAF46-27C2-38D7-80E2-0ACE1AE9520A}</Project>
+      <Name>spirv-cross-c</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\SPIRV-Cross\spirv-cross-core.vcxproj">
+      <Project>{EE75417E-DD99-3162-B3E0-DE8F858C2EC6}</Project>
+      <Name>spirv-cross-core</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\SPIRV-Cross\spirv-cross-cpp.vcxproj">
+      <Project>{D2B2937A-A37D-3D6B-922C-8A72FADB515A}</Project>
+      <Name>spirv-cross-cpp</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\SPIRV-Cross\spirv-cross-glsl.vcxproj">
+      <Project>{E22450ED-A9CF-39BF-89DE-6A28B02423E5}</Project>
+      <Name>spirv-cross-glsl</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\SPIRV-Cross\spirv-cross-hlsl.vcxproj">
+      <Project>{4629FA8A-F5A7-320D-B845-AC839C8807A5}</Project>
+      <Name>spirv-cross-hlsl</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\SPIRV-Cross\spirv-cross-msl.vcxproj">
+      <Project>{87027D36-AB9D-32B2-98B7-3770B8D72187}</Project>
+      <Name>spirv-cross-msl</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\SPIRV-Cross\spirv-cross-reflect.vcxproj">
+      <Project>{6E435477-EEF7-3ED9-96A3-DC6DAB9851AC}</Project>
+      <Name>spirv-cross-reflect</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\SPIRV-Cross\spirv-cross-util.vcxproj">
+      <Project>{1C9C99A0-12A7-3621-8311-91072DBD8BB0}</Project>
+      <Name>spirv-cross-util</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\embree\common\sys\sys.vcxproj">
+      <Project>{59C06D00-1316-3C1A-9294-749502A093B3}</Project>
+      <Name>sys</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\embree\common\tasking\tasking.vcxproj">
+      <Project>{BF63F64F-2910-3EA9-9423-519A27EDCE38}</Project>
+      <Name>tasking</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\tinygltf\tinygltf.vcxproj">
+      <Project>{757BCE44-78C0-39CA-83C4-3C1359A669F4}</Project>
+      <Name>tinygltf</Name>
+    </ProjectReference>
+    <ProjectReference Include="K:\develop\salamandr.dev\Urcho_rbfx\REditor\rbfx\Source\ThirdParty\xatlas\xatlas.vcxproj">
+      <Project>{986F5939-7FF7-3723-9515-02A93844C197}</Project>
+      <Name>xatlas</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

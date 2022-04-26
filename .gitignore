@@ -1,0 +1,10 @@
+CMakeCache.txt
+cmake_install.cmake
+.cmake/
+.idea/
+.vs/
+bin/
+CMakeFiles/
+lib/
+REditor.dir/
+win32/

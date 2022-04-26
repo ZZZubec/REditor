@@ -1,15 +1,16 @@
 #pragma once
 
-#include <Engine/Application.h>
-#include <Scene/Scene.h>
-#include <Input/Input.h>
-#include <UI/Text.h>
-#include <Graphics/Model.h>
+#include <Urho3D/Engine/Application.h>
+#include <Urho3D/Scene/Scene.h>
+#include <Urho3D/Input/Input.h>
+#include <Urho3D/UI/Text.h>
+#include <Urho3D/Graphics/Model.h>
 
-#include <SystemUI/SystemMessageBox.h>
-#include <SystemUI/Gizmo.h>
+#include <Urho3D/SystemUI/SystemMessageBox.h>
+#include <Urho3D/SystemUI/Gizmo.h>
 
 using namespace Urho3D;
+
 
 class REApplication : public Application
 {

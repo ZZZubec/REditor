@@ -16,13 +16,12 @@
 #include <Urho3D/Graphics/IndexBuffer.h>
 #include <Urho3D/Graphics/VertexBuffer.h>
 #include <Urho3D/Graphics/Geometry.h>
-
-#include "IO/FileSystem.h"
+#include <Urho3D/Graphics/DebugRenderer.h>
+#include <Urho3D/UI/UI.h>
+#include <Urho3D/IO/FileSystem.h>
 #include "PugiXml/pugixml.hpp"
 
 #include "Structures.h"
-#include "Graphics/DebugRenderer.h"
-#include "UI/UI.h"
 
 REApplication::REApplication(Urho3D::Context* context)
     : Application(context),

@@ -9,6 +9,8 @@
 #include <Urho3D/SystemUI/SystemMessageBox.h>
 #include <Urho3D/SystemUI/Gizmo.h>
 
+#include "Structures.h"
+
 using namespace Urho3D;
 
 
@@ -79,4 +81,8 @@ private:
     float pitch_;
 
     bool drawDebug_;
+
+    Node* current_node{nullptr};
+    Redi::FFace current_face;
+    unsigned max_faces_in_model{0};
 };

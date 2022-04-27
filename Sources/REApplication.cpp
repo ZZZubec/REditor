@@ -21,10 +21,8 @@
 #include <Urho3D/UI/UI.h>
 #include <Urho3D/IO/FileSystem.h>
 #include "PugiXml/pugixml.hpp"
-
-#include "Structures.h"
-#include "Core/Math.h"
-#include "Graphics/ModelView.h"
+#include <Urho3D/Math/MathDefs.h>
+#include <Urho3D/Graphics/ModelView.h>
 
 REApplication::REApplication(Urho3D::Context* context)
     : Application(context),
@@ -251,6 +249,13 @@ void REApplication::OnUpdate(StringHash, VariantMap& eventData)
 
     MoveCamera(deltaTime);
     RenderUi(deltaTime);
+
+
+    Vector3 hitPos;
+    Drawable* hitDrawable;
+    if (Raycast(250.0f, hitPos, hitDrawable))
+    {
+    }
 }
 
 void REApplication::MoveCamera(float deltaTime)
@@ -377,6 +382,9 @@ bool REApplication::Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDr
     if ((ui->GetCursor() && !ui->GetCursor()->IsVisible()) || ui->GetElementAt(pos, true))
         return false;
 
+    current_node = nullptr;
+    current_face = Redi::FFace();
+
     auto* graphics = GetSubsystem<Graphics>();
     auto* camera = cameraNode_->GetComponent<Camera>();
     Ray cameraRay = camera->GetScreenRay((float)pos.x_ / graphics->GetWidth(), (float)pos.y_ / graphics->GetHeight());
@@ -393,10 +401,11 @@ bool REApplication::Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDr
         IndexBuffer* index_buffer = geom->GetIndexBuffer();
         VertexBuffer* vertex_buffer = geom->GetVertexBuffer(0);
         const ea::vector<VertexElement>& vertex_elements = vertex_buffer->GetElements();
-        const unsigned count_faces = index_buffer->GetIndexCount()/3;
+        max_faces_in_model = index_buffer->GetIndexCount()/3;
         ea::vector<unsigned> indexes = index_buffer->GetUnpackedData();
-        ea::vector<unsigned> indexes_right;
-        ea::vector<Vector3> originalVertices_;
+        ea::vector<Vector3> _vertices;
+
+        current_node = result.node_;
 
         const auto* vertexData = (const unsigned char*)vertex_buffer->Lock(0, vertex_buffer->GetVertexCount());
         if (vertexData)
@@ -407,36 +416,42 @@ bool REApplication::Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDr
             for (unsigned i = 0; i < numVertices; ++i)
             {
                 const Vector3& src = *reinterpret_cast<const Vector3*>(vertexData + i * vertexSize);
-                originalVertices_.push_back(src);
+                _vertices.push_back(src);
             }
             vertex_buffer->Unlock();
         }
 
         float distance = 9999.0f;
-        for(unsigned face_index=0; face_index < count_faces; face_index++)
+        for(unsigned face_index=0; face_index < max_faces_in_model; face_index++)
         {
+            unsigned idx = face_index * 3;
+            Redi::FVertex v1(_vertices[indexes[idx + 0]]);
+            Redi::FVertex v2(_vertices[indexes[idx + 1]]);
+            Redi::FVertex v3(_vertices[indexes[idx + 2]]);
+
+            Redi::FFace face;
+            face.idx = face_index;
+            face.vertices.push_back(v1);
+            face.vertices.push_back(v2);
+            face.vertices.push_back(v3);
+
             const Vector3 vec(
-                 result.position_.DistanceToPoint(originalVertices_[indexes[face_index+0]]),
-                result.position_.DistanceToPoint(originalVertices_[indexes[face_index+1]]),
-                result.position_.DistanceToPoint(originalVertices_[indexes[face_index+2]])
+                result.position_.DistanceToPoint(v1.position),
+                result.position_.DistanceToPoint(v2.position),
+                result.position_.DistanceToPoint(v3.position)
                 );
             const float vec_length = vec.Length();
+
             if(face_index == 0)
             {
                 distance = vec_length;
+                current_face = face;
             }
             if (vec_length < distance)
             {
                 distance = vec_length; 
-                if(!indexes_right.contains(face_index))
-                {
-                    indexes_right.push_back(face_index);
-                }
+                current_face = face;
             }
-        }
-        if(indexes_right.size() == 0)
-        {
-            indexes_right.push_back(0);
         }
         return true;
     }
@@ -468,6 +483,7 @@ void REApplication::HandleMouseModeRequest(StringHash, VariantMap& eventData)
         InitMouseMode(useMouseMode_);
     }
 
+    /*
     if(input->GetMouseMode() == Urho3D::MM_RELATIVE)
     {
         Vector3 hitPos;
@@ -503,6 +519,14 @@ void REApplication::HandlePostRenderUpdate(StringHash eventType, VariantMap& eve
             {
                 dbgRenderer->AddQuad(Vector3(0.5f*x, 0, 0.5f*z), 1.0f, 1.0f, Color::BLACK, true);
             }
+        }
+
+        if (current_face.idx >= 0 && current_face.idx < max_faces_in_model)
+        {
+            const Vector3& v1 = current_face.vertices[0].position;
+            const Vector3& v2 = current_face.vertices[1].position;
+            const Vector3& v3 = current_face.vertices[2].position;
+            dbgRenderer->AddTriangle(v1, v2, v3, Color::RED, true);
         }
     }
 }

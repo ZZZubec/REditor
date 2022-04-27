@@ -1,5 +1,6 @@
 #include "REApplication.h"
 
+#include <Assimp/code/MathFunctions.h>
 #include <Assimp/contrib/rapidjson/include/rapidjson/document.h>
 #include <Urho3D/Core/CoreEvents.h>
 #include <Urho3D/Engine/EngineDefs.h>
@@ -22,6 +23,8 @@
 #include "PugiXml/pugixml.hpp"
 
 #include "Structures.h"
+#include "Core/Math.h"
+#include "Graphics/ModelView.h"
 
 REApplication::REApplication(Urho3D::Context* context)
     : Application(context),
@@ -292,7 +295,10 @@ void REApplication::MoveCamera(float deltaTime)
 
 void REApplication::RenderUi(float deltaTime)
 {
-    gizmo_->ManipulateNode(cameraNode_->GetComponent<Camera>(), boxNode_);
+    if (useMouseMode_ == Urho3D::MM_FREE)
+    {
+        gizmo_->ManipulateNode(cameraNode_->GetComponent<Camera>(), boxNode_);
+    }
 
     ui::SetNextWindowSize(ImVec2(200, 300), ImGuiCond_FirstUseEver);
     ui::SetNextWindowPos(ImVec2(200, 300), ImGuiCond_FirstUseEver);
@@ -361,6 +367,83 @@ void REApplication::InitMouseMode(MouseMode mode)
     //SubscribeToEvent(Urho3D::E_MOUSEBUTTONDOWN, URHO3D_HANDLER(REApplication, HandleMouseModeRequest));
 }
 
+bool REApplication::Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDrawable)
+{
+    hitDrawable = nullptr;
+
+    auto* ui = GetSubsystem<UI>();
+    IntVector2 pos = ui->GetCursorPosition();
+    // Check the cursor is visible and there is no UI element in front of the cursor
+    if ((ui->GetCursor() && !ui->GetCursor()->IsVisible()) || ui->GetElementAt(pos, true))
+        return false;
+
+    auto* graphics = GetSubsystem<Graphics>();
+    auto* camera = cameraNode_->GetComponent<Camera>();
+    Ray cameraRay = camera->GetScreenRay((float)pos.x_ / graphics->GetWidth(), (float)pos.y_ / graphics->GetHeight());
+    // Pick only geometry objects, not eg. zones or lights, only get the first (closest) hit
+    ea::vector<RayQueryResult> results;
+    RayOctreeQuery query(results, cameraRay, RAY_TRIANGLE, maxDistance, DRAWABLE_GEOMETRY);
+    scene_->GetComponent<Octree>()->RaycastSingle(query);
+    if (results.size())
+    {
+        RayQueryResult& result = results[0];
+        hitPos = result.position_;
+        hitDrawable = result.drawable_;
+        auto* geom = hitDrawable->GetLodGeometry(0, 0);
+        IndexBuffer* index_buffer = geom->GetIndexBuffer();
+        VertexBuffer* vertex_buffer = geom->GetVertexBuffer(0);
+        const ea::vector<VertexElement>& vertex_elements = vertex_buffer->GetElements();
+        const unsigned count_faces = index_buffer->GetIndexCount()/3;
+        ea::vector<unsigned> indexes = index_buffer->GetUnpackedData();
+        ea::vector<unsigned> indexes_right;
+        ea::vector<Vector3> originalVertices_;
+
+        const auto* vertexData = (const unsigned char*)vertex_buffer->Lock(0, vertex_buffer->GetVertexCount());
+        if (vertexData)
+        {
+            unsigned numVertices = vertex_buffer->GetVertexCount();
+            unsigned vertexSize = vertex_buffer->GetVertexSize();
+            // Copy the original vertex positions
+            for (unsigned i = 0; i < numVertices; ++i)
+            {
+                const Vector3& src = *reinterpret_cast<const Vector3*>(vertexData + i * vertexSize);
+                originalVertices_.push_back(src);
+            }
+            vertex_buffer->Unlock();
+        }
+
+        float distance = 9999.0f;
+        for(unsigned face_index=0; face_index < count_faces; face_index++)
+        {
+            const Vector3 vec(
+                 result.position_.DistanceToPoint(originalVertices_[indexes[face_index+0]]),
+                result.position_.DistanceToPoint(originalVertices_[indexes[face_index+1]]),
+                result.position_.DistanceToPoint(originalVertices_[indexes[face_index+2]])
+                );
+            const float vec_length = vec.Length();
+            if(face_index == 0)
+            {
+                distance = vec_length;
+            }
+            if (vec_length < distance)
+            {
+                distance = vec_length; 
+                if(!indexes_right.contains(face_index))
+                {
+                    indexes_right.push_back(face_index);
+                }
+            }
+        }
+        if(indexes_right.size() == 0)
+        {
+            indexes_right.push_back(0);
+        }
+        return true;
+    }
+
+    return false;
+}
+
 void REApplication::HandleMouseModeRequest(StringHash, VariantMap& eventData)
 {
 #if URHO3D_SYSTEMUI
@@ -383,6 +466,16 @@ void REApplication::HandleMouseModeRequest(StringHash, VariantMap& eventData)
             useMouseMode_ = Urho3D::MM_RELATIVE;
         }
         InitMouseMode(useMouseMode_);
+    }
+
+    if(input->GetMouseMode() == Urho3D::MM_RELATIVE)
+    {
+        Vector3 hitPos;
+        Drawable* hitDrawable;
+
+        if (Raycast(250.0f, hitPos, hitDrawable))
+        {
+        }
     }
     /**/
 }

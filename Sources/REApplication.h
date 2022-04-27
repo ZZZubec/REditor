@@ -49,7 +49,8 @@ private:
     void RenderUi(float deltaTime);
 
     void InitMouseMode(MouseMode mode);
-
+    
+    bool Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDrawable);
     void HandleMouseModeRequest(StringHash /*eventType*/, VariantMap& eventData);
     void HandleMouseModeChange(StringHash /*eventType*/, VariantMap& eventData);
 

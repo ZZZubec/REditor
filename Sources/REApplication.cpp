@@ -1,7 +1,5 @@
 #include "REApplication.h"
 
-#include <Assimp/code/MathFunctions.h>
-#include <Assimp/contrib/rapidjson/include/rapidjson/document.h>
 #include <Urho3D/Core/CoreEvents.h>
 #include <Urho3D/Engine/EngineDefs.h>
 #include <Urho3D/Graphics/Octree.h>
@@ -13,7 +11,6 @@
 #include <Urho3D/Input/InputConstants.h>
 #include <Urho3D/Resource/ResourceCache.h>
 #include <Urho3D/SystemUI/Console.h>
-#include <Urho3D/Graphics/Texture2D.h>
 #include <Urho3D/Graphics/IndexBuffer.h>
 #include <Urho3D/Graphics/VertexBuffer.h>
 #include <Urho3D/Graphics/Geometry.h>
@@ -58,12 +55,24 @@ void REApplication::Start()
     // could subscribe in the constructor instead.
     SubscribeToEvents();
 
+    CreateFigureBox();
+
     // Set the mouse mode to use in the sample
     InitMouseMode(Urho3D::MM_RELATIVE);
 
     // Pass console commands to file system.
     GetSubsystem<FileSystem>()->SetExecuteConsoleCommands(true);
     GetSubsystem<Console>()->RefreshInterpreters();
+}
+
+void REApplication::CreateFigureBox()
+{
+    _figure_mesh = new Redi::Figure(Redi::EFigureType::FT_QUAD);
+    Redi::FVertex v1 {Vector3(0,0,0), Vector3(0,0,0), Vector2(0,1)};
+    Redi::FVertex v2 {Vector3(0,0,0), Vector3(0,0,0), Vector2(0,1)};
+    Redi::FVertex v3 {Vector3(0,0,0), Vector3(0,0,0), Vector2(0,1)};
+    Redi::FVertex v4 {Vector3(0,0,0), Vector3(0,0,0), Vector2(0,1)};
+    _figure_mesh->AddFace(v1, v2, v3, v4);
 }
 
 void REApplication::CreateConsoleAndDebugHud()
@@ -123,7 +132,7 @@ void REApplication::CreateScene()
     camera->SetFarClip(300.0f);
     GetSubsystem<Renderer>()->SetViewport(0, new Viewport(context_, scene_, camera));
     cameraNode_->SetPosition(Vector3(0.0f, 5.0f, -5.0f));
-    cameraNode_->SetDirection(Vector3(-0.01f, -0.7, 0.6f));
+    cameraNode_->SetDirection(Vector3(-0.01f, -0.7f, 0.6f));
 
     boxNode_ = scene_->CreateChild("Box");
     boxNode_->SetPosition(Vector3::ZERO);
@@ -195,51 +204,7 @@ void REApplication::HandleKeyDown(StringHash eventType, VariantMap& eventData)
     auto* input = GetSubsystem<Input>();
     if(input->GetKeyPress(KEY_SPACE))
     {
-        this->ReadFile("Scenes/RenderingShowcase_2_BakedDirect.xml");
-        /*
-        pugi::xml_document* doc = xml_file_->GetDocument();
-
-        ea::string xml_node_name("");
-        for (pugi::xml_node compElement = doc->root().child("scene"); compElement; compElement = compElement.next_sibling("component"))
-        {
-            URHO3D_LOGINFO("{}", compElement.name());
-            xml_node_name.append("->" + (ea::string)compElement.name());
-            for (const pugi::xml_attribute at : compElement.attributes())
-            {
-                ea::string at_name = at.name();
-                ea::string at_value = at.value();
-                URHO3D_LOGINFO("/{} {}={}", xml_node_name, at_name, at_value);
-            }
-        }
-        */
-        /*
-        for (const pugi::xml_attribute at : xml_node.attributes())
-        {
-            ea::string at_name = at.name();
-            ea::string at_value = at.value();
-            URHO3D_LOGINFO("/{}->. {} = {}", xml_node.name(), at_name, at_value);
-        }
-        */
-
-        /*
-        auto source = xml_file_->GetRoot();
-        XMLElement compElem = source.GetChild("component");
-        while (compElem)
-        {
-            ea::string typeName = compElem.GetAttribute("type");
-            unsigned compID = compElem.GetUInt("id");
-            URHO3D_LOGINFO("/component->{}({})", compElem.GetName(), typeName);
-            compElem = compElem.GetNext("component");
-        }
-
-        XMLElement childElem = source.GetChild("node");
-        while (childElem)
-        {
-            unsigned nodeID = childElem.GetUInt("id");
-            URHO3D_LOGINFO("/node->{}", compElem.GetName());
-            childElem = childElem.GetNext("node");
-        }
-        */
+        //
     }
 }
 
@@ -249,13 +214,11 @@ void REApplication::OnUpdate(StringHash, VariantMap& eventData)
 
     MoveCamera(deltaTime);
     RenderUi(deltaTime);
+}
 
-
-    Vector3 hitPos;
-    Drawable* hitDrawable;
-    if (Raycast(250.0f, hitPos, hitDrawable))
-    {
-    }
+void REApplication::SetEditorMode(Redi::EEditorMode editor_mode)
+{
+    _editor_mode = editor_mode;
 }
 
 void REApplication::MoveCamera(float deltaTime)
@@ -295,6 +258,14 @@ void REApplication::MoveCamera(float deltaTime)
         // Toggle debug geometry with space
         if (input->GetKeyPress(KEY_SPACE))
             drawDebug_ = !drawDebug_;
+
+        if (Raycast(250.0f))
+        {
+            if (input->GetKeyDown(KEY_E))
+            {
+                SetEditorMode(Redi::EEditorMode::EM_EXTRUDE);
+            }
+        }
     }
 }
 
@@ -372,7 +343,23 @@ void REApplication::InitMouseMode(MouseMode mode)
     //SubscribeToEvent(Urho3D::E_MOUSEBUTTONDOWN, URHO3D_HANDLER(REApplication, HandleMouseModeRequest));
 }
 
-bool REApplication::Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDrawable)
+Redi::FFace REApplication::CreateFace(unsigned face_index)
+{
+    unsigned idx = face_index*3;
+    Redi::FVertex v1 {_vertices[_indexes[idx + 0]] };
+    Redi::FVertex v2 {_vertices[_indexes[idx + 1]] };
+    Redi::FVertex v3 {_vertices[_indexes[idx + 2]] };
+
+    Redi::FFace face;
+    face.idx = face_index;
+    face.vertices.push_back(v1);
+    face.vertices.push_back(v2);
+    face.vertices.push_back(v3);
+
+    return face;
+}
+
+bool REApplication::Raycast(float maxDistance)
 {
     hitDrawable = nullptr;
 
@@ -384,6 +371,8 @@ bool REApplication::Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDr
 
     current_node = nullptr;
     current_face = Redi::FFace();
+    _indexes.clear();
+    _vertices.clear();
 
     auto* graphics = GetSubsystem<Graphics>();
     auto* camera = cameraNode_->GetComponent<Camera>();
@@ -402,10 +391,15 @@ bool REApplication::Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDr
         VertexBuffer* vertex_buffer = geom->GetVertexBuffer(0);
         const ea::vector<VertexElement>& vertex_elements = vertex_buffer->GetElements();
         max_faces_in_model = index_buffer->GetIndexCount()/3;
-        ea::vector<unsigned> indexes = index_buffer->GetUnpackedData();
-        ea::vector<Vector3> _vertices;
+        ea::vector<unsigned> inds = index_buffer->GetUnpackedData();
+        for(unsigned i=0; i<inds.size(); i++)
+        {
+            _indexes.push_back(inds[i]);
+        }
+        
 
         current_node = result.node_;
+        result.position_ -= current_node->GetWorldPosition();
 
         const auto* vertexData = (const unsigned char*)vertex_buffer->Lock(0, vertex_buffer->GetVertexCount());
         if (vertexData)
@@ -415,7 +409,7 @@ bool REApplication::Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDr
             // Copy the original vertex positions
             for (unsigned i = 0; i < numVertices; ++i)
             {
-                const Vector3& src = *reinterpret_cast<const Vector3*>(vertexData + i * vertexSize);
+                const Vector3& src = *reinterpret_cast<const Vector3*>(vertexData + i * vertexSize) * current_node->GetScale();
                 _vertices.push_back(src);
             }
             vertex_buffer->Unlock();
@@ -425,20 +419,12 @@ bool REApplication::Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDr
         for(unsigned face_index=0; face_index < max_faces_in_model; face_index++)
         {
             unsigned idx = face_index * 3;
-            Redi::FVertex v1(_vertices[indexes[idx + 0]]);
-            Redi::FVertex v2(_vertices[indexes[idx + 1]]);
-            Redi::FVertex v3(_vertices[indexes[idx + 2]]);
-
-            Redi::FFace face;
-            face.idx = face_index;
-            face.vertices.push_back(v1);
-            face.vertices.push_back(v2);
-            face.vertices.push_back(v3);
+            Redi::FFace face = CreateFace(face_index);
 
             const Vector3 vec(
-                result.position_.DistanceToPoint(v1.position),
-                result.position_.DistanceToPoint(v2.position),
-                result.position_.DistanceToPoint(v3.position)
+                result.position_.DistanceToPoint(face.vertices[0].position),
+                result.position_.DistanceToPoint(face.vertices[1].position),
+                result.position_.DistanceToPoint(face.vertices[2].position)
                 );
             const float vec_length = vec.Length();
 
@@ -453,6 +439,7 @@ bool REApplication::Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDr
                 current_face = face;
             }
         }
+        
         return true;
     }
 
@@ -482,17 +469,6 @@ void REApplication::HandleMouseModeRequest(StringHash, VariantMap& eventData)
         }
         InitMouseMode(useMouseMode_);
     }
-
-    /*
-    if(input->GetMouseMode() == Urho3D::MM_RELATIVE)
-    {
-        Vector3 hitPos;
-        Drawable* hitDrawable;
-
-        if (Raycast(250.0f, hitPos, hitDrawable))
-        {
-        }
-    }
     /**/
 }
 
@@ -501,6 +477,141 @@ void REApplication::HandleMouseModeChange(StringHash, VariantMap& eventData)
     Urho3D::Input* input = GetSubsystem<Urho3D::Input>();
     bool mouseLocked = eventData[Urho3D::MouseModeChanged::P_MOUSELOCKED].GetBool();
     input->SetMouseVisible(!mouseLocked);
+}
+
+Vector3 REApplication::MinVector(const Vector3& a, const Vector3& b)
+{
+    return Vector3(Min(a.x_, b.x_), Min(a.y_, b.y_), Min(a.z_, b.z_));
+}
+
+Vector3 REApplication::MaxVector(const Vector3& a, const Vector3& b)
+{
+    return Vector3(Max(a.x_, b.x_), Max(a.y_, b.y_), Max(a.z_, b.z_));
+}
+
+ea::vector<Vector3> REApplication::GetVerticesRect(const Redi::FFace& face, const Redi::FFace& next_face)
+{
+    ea::vector<Vector3> positions;
+    positions.push_back(current_face.vertices[0].position);
+    positions.push_back(current_face.vertices[1].position);
+    positions.push_back(current_face.vertices[2].position);
+            
+    for(unsigned i=0; i<next_face.vertices.size(); i++)
+    {
+        bool find = false;
+        for(unsigned j=0; j<current_face.vertices.size(); j++)
+        {
+            if(next_face.vertices[i].position.DistanceToPoint(current_face.vertices[j].position) < 0.001f)
+            {
+                find = true;
+                break;
+            }
+        }
+        if(!find)
+        {
+            positions.push_back(next_face.vertices[i].position);
+            break;
+        }
+    }
+
+    const float eps = 0.1f;
+    Redi::FNormalRect rect;
+    rect.min = positions[0];
+    rect.max = positions[0];
+    for(unsigned i=1; i<positions.size(); i++)
+    {
+        rect.min = MinVector(rect.min, positions[i]);
+        rect.max = MaxVector(rect.max, positions[i]);
+    }
+
+    ea::vector<Vector3> rect_pos(4);
+    
+    if(Equals(positions[0].z_, positions[1].z_, eps) && Equals(positions[0].z_, positions[2].z_, eps))
+    {
+        rect.direction = Redi::ENormalDirection::ND_Z;
+        for(unsigned i=0; i<positions.size(); i++)
+        {
+            if(positions[i].Equals(Vector3(rect.min.x_, rect.min.y_, rect.min.z_), eps))
+            {
+                rect_pos[0] = positions[i];
+            }
+            else if(positions[i].Equals(Vector3(rect.min.x_, rect.max.y_, rect.min.z_), eps))
+            {
+                rect_pos[1] = positions[i];
+            }
+            else if(positions[i].Equals(Vector3(rect.max.x_, rect.max.y_, rect.min.z_), eps))
+            {
+                rect_pos[2] = positions[i];
+            }
+            else if(positions[i].Equals(Vector3(rect.max.x_, rect.min.y_, rect.min.z_), eps))
+            {
+                rect_pos[3] = positions[i];
+            }
+        }
+    }
+    else if(Equals(positions[0].x_, positions[1].x_, eps) && Equals(positions[0].x_, positions[2].x_, eps))
+    {
+        rect.direction = Redi::ENormalDirection::ND_X;
+        for(unsigned i=0; i<positions.size(); i++)
+        {
+            if(positions[i].Equals(Vector3(rect.min.x_, rect.min.y_, rect.min.z_)))
+            {
+                rect_pos[0] = positions[i];
+            }
+            else if(positions[i].Equals(Vector3(rect.min.x_, rect.min.y_, rect.max.z_), eps))
+            {
+                rect_pos[1] = positions[i];
+            }
+            else if(positions[i].Equals(Vector3(rect.min.x_, rect.max.y_, rect.max.z_), eps))
+            {
+                rect_pos[2] = positions[i];
+            }
+            else if(positions[i].Equals(Vector3(rect.min.x_, rect.max.y_, rect.min.z_), eps))
+            {
+                rect_pos[3] = positions[i];
+            }
+        }
+    }
+    else
+    {
+        rect.direction = Redi::ENormalDirection::ND_Y;
+        for(unsigned i=0; i<positions.size(); i++)
+        {
+            if(positions[i].Equals(Vector3(rect.min.x_, rect.min.y_, rect.min.z_), eps))
+            {
+                rect_pos[0] = positions[i];
+            }
+            else if(positions[i].Equals(Vector3(rect.min.x_, rect.min.y_, rect.max.z_), eps))
+            {
+                rect_pos[1] = positions[i];
+            }
+            else if(positions[i].Equals(Vector3(rect.max.x_, rect.min.y_, rect.max.z_), eps))
+            {
+                rect_pos[2] = positions[i];
+            }
+            else if(positions[i].Equals(Vector3(rect.max.x_, rect.min.y_, rect.min.z_), eps))
+            {
+                rect_pos[3] = positions[i];
+            }
+        }
+    }
+    for(unsigned i=0; i<rect_pos.size(); i++)
+    {
+        rect_pos[i] = current_node->GetWorldPosition() + current_node->GetWorldRotation() * rect_pos[i];
+    }
+
+    return rect_pos;
+}
+
+Vector3 REApplication::RotateVector(const Vector3& origin, const Vector3& axis, float angle)
+{
+    Vector3 vxp = axis.CrossProduct(origin);
+    Vector3 vxvxp = axis.CrossProduct(vxp);
+    return origin + Sin(angle) * vxp + (1 - Cos(angle)) * vxvxp;
+}
+Vector3 REApplication::RotateAboutPoint(const Vector3& origin, const Vector3& pivot, const Vector3& axis, float angle)
+{
+    return pivot + RotateVector((origin - pivot), axis, angle);
 }
 
 void REApplication::HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData)
@@ -523,10 +634,20 @@ void REApplication::HandlePostRenderUpdate(StringHash eventType, VariantMap& eve
 
         if (current_face.idx >= 0 && current_face.idx < max_faces_in_model)
         {
-            const Vector3& v1 = current_face.vertices[0].position;
-            const Vector3& v2 = current_face.vertices[1].position;
-            const Vector3& v3 = current_face.vertices[2].position;
-            dbgRenderer->AddTriangle(v1, v2, v3, Color::RED, true);
+            unsigned next_face_id = 0;
+            if(current_face.idx % 2 == 0)
+            {
+                next_face_id = current_face.idx + 1;
+            }
+            else
+            {
+                next_face_id = current_face.idx - 1;
+            }
+
+            Redi::FFace next_face = CreateFace(next_face_id);
+            ea::vector<Vector3> rect_pos = GetVerticesRect(current_face, next_face);
+
+            dbgRenderer->AddPolygon(rect_pos[0], rect_pos[1], rect_pos[2], rect_pos[3], Color::GRAY, false);
         }
     }
 }

@@ -9,6 +9,7 @@
 #include <Urho3D/SystemUI/SystemMessageBox.h>
 #include <Urho3D/SystemUI/Gizmo.h>
 
+#include "Figure.h"
 #include "Structures.h"
 
 using namespace Urho3D;
@@ -24,6 +25,7 @@ public:
     void Setup() override;
     /// Setup after engine initialization and before running the main loop.
     void Start() override;
+    void CreateFigureBox();
     void CreateConsoleAndDebugHud();
     /// Tear down any state that would pollute next initialization of the sample.
     void Stop() override;
@@ -46,16 +48,23 @@ private:
     /// Animate cube, handle keys.
     void OnUpdate(StringHash, VariantMap& eventData);
 
+    void SetEditorMode(Redi::EEditorMode editor_mode);
     void MoveCamera(float deltaTime);
     /// Assemble debug UI and handle UI events.
     void RenderUi(float deltaTime);
 
     void InitMouseMode(MouseMode mode);
-    
-    bool Raycast(float maxDistance, Vector3& hitPos, Drawable*& hitDrawable);
+
+    Redi::FFace CreateFace(unsigned face_index);
+    bool Raycast(float maxDistance);
     void HandleMouseModeRequest(StringHash /*eventType*/, VariantMap& eventData);
     void HandleMouseModeChange(StringHash /*eventType*/, VariantMap& eventData);
+    Vector3 MinVector(const Vector3& a, const Vector3& b);
+    Vector3 MaxVector(const Vector3& a, const Vector3& b);
 
+    ea::vector<Vector3> GetVerticesRect(const Redi::FFace& face, const Redi::FFace& next_face);
+    Vector3 RotateVector(const Vector3& origin, const Vector3& axis, float angle);
+    Vector3 RotateAboutPoint(const Vector3& origin, const Vector3& pivot, const Vector3& axis, double angle);
     void HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData);
 
     /// Scene.
@@ -77,7 +86,6 @@ private:
     XMLFile* xml_file_;
 
     float yaw_;
-    /// Camera pitch angle.
     float pitch_;
 
     bool drawDebug_;
@@ -85,4 +93,13 @@ private:
     Node* current_node{nullptr};
     Redi::FFace current_face;
     unsigned max_faces_in_model{0};
+
+    Vector3 hitPos{Vector3::ZERO};
+    Drawable* hitDrawable{nullptr};
+    
+    ea::vector<Vector3> _vertices{};
+    ea::vector<unsigned> _indexes{};
+    Redi::EEditorMode _editor_mode;
+
+    Redi::Figure* _figure_mesh;
 };

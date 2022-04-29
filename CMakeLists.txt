@@ -17,7 +17,10 @@ set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 add_subdirectory(rbfx)
 
 # Define executable name.
-add_executable(REditor WIN32 Sources/REApplication.h Sources/REApplication.cpp Sources/Structures.h)
+add_executable(REditor WIN32 
+    Sources/REApplication.h Sources/REApplication.cpp 
+    Sources/Structures.h 
+    Sources/Figure.h Sources/Figure.cpp)
 
 # Link to game engine library.
 target_link_libraries(REditor Urho3D)

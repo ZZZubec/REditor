@@ -64,7 +64,7 @@ private:
 
     ea::vector<Vector3> GetVerticesRect(const Redi::FFace& face, const Redi::FFace& next_face);
     Vector3 RotateVector(const Vector3& origin, const Vector3& axis, float angle);
-    Vector3 RotateAboutPoint(const Vector3& origin, const Vector3& pivot, const Vector3& axis, double angle);
+    Vector3 RotateAboutPoint(const Vector3& origin, const Vector3& pivot, const Vector3& axis, float angle);
     void HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData);
 
     /// Scene.

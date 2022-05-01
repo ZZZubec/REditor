@@ -68,11 +68,58 @@ void REApplication::Start()
 void REApplication::CreateFigureBox()
 {
     _figure_mesh = new Redi::Figure(Redi::EFigureType::FT_QUAD);
-    Redi::FVertex v1 {Vector3(0,0,0), Vector3(0,0,0), Vector2(0,1)};
-    Redi::FVertex v2 {Vector3(0,0,0), Vector3(0,0,0), Vector2(0,1)};
-    Redi::FVertex v3 {Vector3(0,0,0), Vector3(0,0,0), Vector2(0,1)};
-    Redi::FVertex v4 {Vector3(0,0,0), Vector3(0,0,0), Vector2(0,1)};
-    _figure_mesh->AddFace(v1, v2, v3, v4);
+    //forward
+    {
+        Redi::FVertex v1 {Vector3(1,0,0), Vector3(0,0,1), Vector2(1,1)};
+        Redi::FVertex v2 {Vector3(1,1,0), Vector3(0,0,1), Vector2(1,0)};
+        Redi::FVertex v3 {Vector3(0,1,0), Vector3(0,0,1), Vector2(0,0)};
+        Redi::FVertex v4 {Vector3(0,0,0), Vector3(0,0,1), Vector2(0,1)};
+        _figure_mesh->AddFace(v1, v2, v3, v4);
+    }
+    
+    //backward
+    {
+        Redi::FVertex v1 {Vector3(0,0,1), Vector3(0,0,-1), Vector2(0,1)};
+        Redi::FVertex v2 {Vector3(0,1,1), Vector3(0,0,-1), Vector2(0,0)};
+        Redi::FVertex v3 {Vector3(1,1,1), Vector3(0,0,-1), Vector2(1,0)};
+        Redi::FVertex v4 {Vector3(1,0,1), Vector3(0,0,-1), Vector2(1,1)};
+        _figure_mesh->AddFace(v1, v2, v3, v4);
+    }
+    
+    //left
+    {
+        Redi::FVertex v1 {Vector3(0,0,1), Vector3(-1,0,0), Vector2(0,1)};
+        Redi::FVertex v2 {Vector3(0,1,1), Vector3(-1,0,0), Vector2(0,0)};
+        Redi::FVertex v3 {Vector3(0,1,0), Vector3(-1,0,0), Vector2(1,0)};
+        Redi::FVertex v4 {Vector3(0,0,0), Vector3(-1,0,0), Vector2(1,1)};
+        _figure_mesh->AddFace(v1, v2, v3, v4);
+    }
+
+    //right
+    {
+        Redi::FVertex v1 {Vector3(1,0,0), Vector3(1,0,0), Vector2(1,1)};
+        Redi::FVertex v2 {Vector3(1,1,0), Vector3(1,0,0), Vector2(1,0)};
+        Redi::FVertex v3 {Vector3(1,1,1), Vector3(1,0,0), Vector2(0,0)};
+        Redi::FVertex v4 {Vector3(1,0,1), Vector3(1,0,0), Vector2(0,1)};
+        _figure_mesh->AddFace(v1, v2, v3, v4);
+    }
+    
+    //top
+    {
+        Redi::FVertex v1 {Vector3(0,1,0), Vector3(0,1,0), Vector2(0,1)};
+        Redi::FVertex v2 {Vector3(0,1,1), Vector3(0,1,0), Vector2(0,0)};
+        Redi::FVertex v3 {Vector3(1,1,1), Vector3(0,1,0), Vector2(1,0)};
+        Redi::FVertex v4 {Vector3(1,1,0), Vector3(0,1,0), Vector2(1,1)};
+        _figure_mesh->AddFace(v1, v2, v3, v4);
+    }
+
+    {
+        Redi::FVertex v1 {Vector3(1,0,0), Vector3(0,-1,0), Vector2(1,1)};
+        Redi::FVertex v2 {Vector3(1,0,1), Vector3(0,-1,0), Vector2(1,0)};
+        Redi::FVertex v3 {Vector3(0,0,1), Vector3(0,-1,0), Vector2(0,0)};
+        Redi::FVertex v4 {Vector3(0,0,0), Vector3(0,-1,0), Vector2(0,1)};
+        _figure_mesh->AddFace(v1, v2, v3, v4);
+    }
 }
 
 void REApplication::CreateConsoleAndDebugHud()
@@ -135,7 +182,7 @@ void REApplication::CreateScene()
     cameraNode_->SetDirection(Vector3(-0.01f, -0.7f, 0.6f));
 
     boxNode_ = scene_->CreateChild("Box");
-    boxNode_->SetPosition(Vector3::ZERO);
+    boxNode_->SetPosition(Vector3(10,0, 10));
     const auto staticModel = boxNode_->CreateComponent<StaticModel>();
     staticModel->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
     staticModel->SetMaterial(cache_->GetResource<Material>("Materials/DefaultGrey.xml"));
@@ -259,6 +306,7 @@ void REApplication::MoveCamera(float deltaTime)
         if (input->GetKeyPress(KEY_SPACE))
             drawDebug_ = !drawDebug_;
 
+        /*
         if (Raycast(250.0f))
         {
             if (input->GetKeyDown(KEY_E))
@@ -266,7 +314,24 @@ void REApplication::MoveCamera(float deltaTime)
                 SetEditorMode(Redi::EEditorMode::EM_EXTRUDE);
             }
         }
+        */
     }
+
+    auto* ui = GetSubsystem<UI>();
+    IntVector2 pos = ui->GetCursorPosition();
+    // Check the cursor is visible and there is no UI element in front of the cursor
+    if ((ui->GetCursor() && !ui->GetCursor()->IsVisible()) || ui->GetElementAt(pos, true))
+        return;
+
+    current_node = nullptr;
+    current_face = Redi::FFace();
+    _indexes.clear();
+    _vertices.clear();
+
+    auto* graphics = GetSubsystem<Graphics>();
+    auto* camera = cameraNode_->GetComponent<Camera>();
+    Ray cameraRay = camera->GetScreenRay((float)pos.x_ / graphics->GetWidth(), (float)pos.y_ / graphics->GetHeight());
+    _figure_mesh->TraceLine(cameraRay.origin_, cameraRay.direction_, 250.0f);
 }
 
 void REApplication::RenderUi(float deltaTime)
@@ -631,6 +696,8 @@ void REApplication::HandlePostRenderUpdate(StringHash eventType, VariantMap& eve
                 dbgRenderer->AddQuad(Vector3(0.5f*x, 0, 0.5f*z), 1.0f, 1.0f, Color::BLACK, true);
             }
         }
+
+        _figure_mesh->render(dbgRenderer);
 
         if (current_face.idx >= 0 && current_face.idx < max_faces_in_model)
         {

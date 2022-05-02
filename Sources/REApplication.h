@@ -25,6 +25,7 @@ public:
     void Setup() override;
     /// Setup after engine initialization and before running the main loop.
     void Start() override;
+    void CreateFaceDirection(Redi::EFaceDirection eDirection, const Vector3& Position);
     void CreateFigureBox();
     void CreateConsoleAndDebugHud();
     /// Tear down any state that would pollute next initialization of the sample.
@@ -49,6 +50,7 @@ private:
     void OnUpdate(StringHash, VariantMap& eventData);
 
     void SetEditorMode(Redi::EEditorMode editor_mode);
+    void CreateFigureBoxWithoutFace(Redi::FFace* face);
     void MoveCamera(float deltaTime);
     /// Assemble debug UI and handle UI events.
     void RenderUi(float deltaTime);
@@ -102,4 +104,5 @@ private:
     Redi::EEditorMode _editor_mode;
 
     Redi::Figure* _figure_mesh;
+    ea::vector<Node*> cubes;
 };

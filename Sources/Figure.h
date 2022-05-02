@@ -34,7 +34,14 @@ public:
     BoundingBox CalculateMinMax(const ea::vector<FVertex>& vertices) const;
 
     float GetDistance(const FFace& face, const Vector3& origin) const;
-    bool TraceLine(const Vector3& CameraPosition, const Vector3& CameraDirection, const float maxDistance);
+    bool TraceLine(const Vector3& CameraPosition, const Vector3& CameraDirection, const float maxDistance, Vector3& hitPos);
+
+    Redi::FFace* GetSelectedFace();
+    Redi::EFaceDirection GetFaceDirection(FFace* face);
+    Redi::EFaceDirection InvertFaceDirection(EFaceDirection eDirection);
+    Urho3D::Vector3 GetVector3(EFaceDirection eDirection);
+    void MoveFace(unsigned idx, const Vector3& offset);
+    
 };
 
 inline bool FFaceRayCompare(const FFaceRay& lhs, const FFaceRay& rhs)

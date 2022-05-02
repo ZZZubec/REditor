@@ -44,16 +44,21 @@ void Figure::AddFace(const FVertex& v1, const FVertex& v2, const FVertex& v3, co
 
 void Figure::render(Urho3D::DebugRenderer* debug_renderer)
 {
-    for(FFace face : faces)
+    const float size = 0.1f;
+    for(const FFace* face = faces.begin(); face != faces.end(); ++face)
     {
-        if(selected_faces.contains(face.idx))
+        if(selected_faces.contains(face->idx))
         {
-            debug_renderer->AddPolygon(face.vertices[0].position, face.vertices[1].position, face.vertices[2].position, face.vertices[3].position, Color(1.0f, 0.f, 0.f, 0.5f), false);
+            debug_renderer->AddPolygon(face->vertices[0].position, face->vertices[1].position, face->vertices[2].position, face->vertices[3].position, Color(1.0f, 0.f, 0.f, 0.5f), false);
         }
         else
         {
-            debug_renderer->AddPolygon(face.vertices[0].position, face.vertices[1].position, face.vertices[2].position, face.vertices[3].position, Color(0.4f, 0.4f, 0.4f, 1.0f), true);
+            debug_renderer->AddPolygon(face->vertices[0].position, face->vertices[1].position, face->vertices[2].position, face->vertices[3].position, Color(0.4f, 0.4f, 0.4f, 1.0f), true);
         }
+        debug_renderer->AddLine(face->vertices[0].position, face->vertices[1].position, Color(0.2f, 0.2f, 0.2f, 0.5f), true);
+        debug_renderer->AddLine(face->vertices[1].position, face->vertices[2].position, Color(0.2f, 0.2f, 0.2f, 0.5f), true);
+        debug_renderer->AddLine(face->vertices[2].position, face->vertices[3].position, Color(0.2f, 0.2f, 0.2f, 0.5f), true);
+        debug_renderer->AddLine(face->vertices[3].position, face->vertices[0].position, Color(0.2f, 0.2f, 0.2f, 0.5f), true);
     }
 }
 
@@ -164,7 +169,7 @@ float Figure::GetDistance(const FFace& face, const Vector3& origin) const
     return distance/(float)face.vertices.size();
 }
 
-bool Figure::TraceLine(const Vector3& CameraPosition, const Vector3& CameraDirection, const float maxDistance)
+bool Figure::TraceLine(const Vector3& CameraPosition, const Vector3& CameraDirection, const float maxDistance, Vector3& hitPos)
 {
     Vector3 dotp = Vector3::UP;
     float v = dotp.DotProduct(CameraDirection);
@@ -210,7 +215,10 @@ bool Figure::TraceLine(const Vector3& CameraPosition, const Vector3& CameraDirec
     if(shotFaces.size() > 1)
     {
         shotFaces.resize(1);
-        selected_faces.push_back(faces[shotFaces[0].array_index].idx);
+        FFace face = faces[shotFaces[0].array_index];
+        hitPos = Vector3(cameraRay.origin_ + cameraRay.direction_ * shotFaces[0].distance);
+        //hitPos -= Vector3(cameraRay.direction_ * Abs(Vector3(hitPos - face.boundingBox.Center()).Length()));
+        selected_faces.push_back(face.idx);
     }
 
     if(selected_faces.size() > 0)
@@ -220,5 +228,118 @@ bool Figure::TraceLine(const Vector3& CameraPosition, const Vector3& CameraDirec
     else
     {
         return false;
+    }
+}
+
+Redi::FFace* Figure::GetSelectedFace()
+{
+    if(selected_faces.size() > 0)
+    {
+        for (FFace* face = faces.begin(); face != faces.end(); ++face)
+        {
+            if(face->idx == selected_faces[0])
+            {
+                return face;
+            }
+        }
+    }
+}
+
+Redi::EFaceDirection Figure::GetFaceDirection(FFace* face)
+{
+    if(face->normal.Equals(Vector3::UP))
+    {
+        return Redi::FD_UP;
+    }
+    else if(face->normal.Equals(Vector3::DOWN))
+    {
+        return Redi::FD_DOWN;
+    }
+    else if(face->normal.Equals(Vector3::LEFT))
+    {
+        return Redi::FD_LEFT;
+    }
+    else if(face->normal.Equals(Vector3::RIGHT))
+    {
+        return Redi::FD_RIGHT;
+    }
+    else if(face->normal.Equals(Vector3::FORWARD))
+    {
+        return Redi::FD_FORWARD;
+    }
+    else if(face->normal.Equals(Vector3::BACK))
+    {
+        return Redi::FD_BACK;
+    }
+    return Redi::FD_NONE;
+}
+
+Redi::EFaceDirection Figure::InvertFaceDirection(EFaceDirection eDirection)
+{
+    switch (eDirection)
+    {
+    default:
+        return FD_NONE;
+    case FD_UP:
+        return FD_DOWN;
+    case FD_DOWN:
+        return FD_UP;
+    case FD_LEFT:
+        return FD_RIGHT;
+    case FD_RIGHT:
+        return FD_LEFT;
+    case FD_FORWARD:
+        return FD_BACK;
+    case FD_BACK:
+        return FD_FORWARD;
+    }
+}
+
+Urho3D::Vector3 Figure::GetVector3(EFaceDirection eDirection)
+{
+    switch (eDirection)
+    {
+    default:
+        return Vector3::ZERO;
+    case FD_UP:
+        return Vector3::UP;
+    case FD_DOWN:
+        return Vector3::DOWN;
+    case FD_LEFT:
+        return Vector3::LEFT;
+    case FD_RIGHT:
+        return Vector3::RIGHT;
+    case FD_FORWARD:
+        return Vector3::FORWARD;
+    case FD_BACK:
+        return Vector3::BACK;
+    }
+}
+
+void Figure::MoveFace(unsigned idx, const Vector3& offset)
+{
+    for(const FFace* oldFace = faces.begin(); oldFace != faces.end(); ++oldFace)
+    {
+        if(oldFace->idx == idx)
+        {
+            ea::vector<FVertex> n_vertices;
+            for(unsigned j=0; j<oldFace->vertices.size(); ++j)
+            {
+                const FVertex vertex{Vector3(oldFace->vertices[j].position + offset), oldFace->vertices[j].normal, oldFace->vertices[j].uv};
+                n_vertices.push_back(vertex);
+            }
+
+            if(selected_faces.contains(oldFace->idx))
+            {
+                selected_faces.clear();
+            }
+
+            const BoundingBox bb = CalculateMinMax(n_vertices);
+            Redi::FFace nFace = FFace::CreateFace(oldFace->idx, n_vertices, Vector3(oldFace->normal), bb);
+
+            faces.erase(oldFace);
+            faces.push_back(nFace);
+            break;
+        }
     }
 }

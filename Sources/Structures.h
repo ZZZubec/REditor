@@ -19,6 +19,11 @@ namespace Redi {
         FT_TRIANGLE, FT_QUAD
     };
 
+    enum EFaceDirection : unsigned
+    {
+        FD_NONE, FD_FORWARD, FD_BACK, FD_LEFT, FD_RIGHT, FD_UP, FD_DOWN
+    };
+
     struct FVertex
     {
         Urho3D::Vector3 position{ Urho3D::Vector3::ZERO };

@@ -65,61 +65,84 @@ void REApplication::Start()
     GetSubsystem<Console>()->RefreshInterpreters();
 }
 
+void REApplication::CreateFaceDirection(Redi::EFaceDirection eDirection, const Vector3& Position)
+{
+    switch (eDirection)
+    {
+    default:
+        break;
+    case Redi::FD_FORWARD:
+        //forward
+        {
+            Redi::FVertex v1 {Position + Vector3(0.5f,-0.5f,0), Vector3(0,0,1), Vector2(1,1)};
+            Redi::FVertex v2 {Position + Vector3(0.5f,0.5f,0), Vector3(0,0,1), Vector2(1,0)};
+            Redi::FVertex v3 {Position + Vector3(-0.5f,0.5f,0), Vector3(0,0,1), Vector2(0,0)};
+            Redi::FVertex v4 {Position + Vector3(-0.5f,-0.5f,0), Vector3(0,0,1), Vector2(0,1)};
+            _figure_mesh->AddFace(v1, v2, v3, v4);
+        }
+        break;
+    case Redi::FD_BACK:
+        //backward
+        {
+            Redi::FVertex v1 {Position + Vector3(-0.5f,-0.5f,0), Vector3(0,0,-1), Vector2(0,1)};
+            Redi::FVertex v2 {Position + Vector3(-0.5f,0.5f,0), Vector3(0,0,-1), Vector2(0,0)};
+            Redi::FVertex v3 {Position + Vector3(0.5f,0.5f,0), Vector3(0,0,-1), Vector2(1,0)};
+            Redi::FVertex v4 {Position + Vector3(0.5f,-0.5f,0), Vector3(0,0,-1), Vector2(1,1)};
+            _figure_mesh->AddFace(v1, v2, v3, v4);
+        }
+        break;
+    case Redi::FD_LEFT:
+        //left
+        {
+        Redi::FVertex v1 {Position + Vector3(0,-0.5f,0.5f), Vector3(-1,0,0), Vector2(0,1)};
+        Redi::FVertex v2 {Position + Vector3(0,0.5f,0.5f), Vector3(-1,0,0), Vector2(0,0)};
+        Redi::FVertex v3 {Position + Vector3(0,0.5f,-0.5f), Vector3(-1,0,0), Vector2(1,0)};
+        Redi::FVertex v4 {Position + Vector3(0,-0.5f,-0.5f), Vector3(-1,0,0), Vector2(1,1)};
+        _figure_mesh->AddFace(v1, v2, v3, v4);
+        }
+        break;
+    case Redi::FD_RIGHT:
+        //right
+        {
+            Redi::FVertex v1 {Position + Vector3(0,-0.5f,-0.5f), Vector3(1,0,0), Vector2(1,1)};
+            Redi::FVertex v2 {Position + Vector3(0,0.5f,-0.5f), Vector3(1,0,0), Vector2(1,0)};
+            Redi::FVertex v3 {Position + Vector3(0,0.5f,0.5f), Vector3(1,0,0), Vector2(0,0)};
+            Redi::FVertex v4 {Position + Vector3(0,-0.5f,0.5f), Vector3(1,0,0), Vector2(0,1)};
+            _figure_mesh->AddFace(v1, v2, v3, v4);
+        }
+        break;
+    case Redi::FD_UP:
+        //top
+        {
+        Redi::FVertex v1 {Position + Vector3(-0.5f,0,-0.5f), Vector3(0,1,0), Vector2(0,1)};
+        Redi::FVertex v2 {Position + Vector3(-0.5f,0,0.5f), Vector3(0,1,0), Vector2(0,0)};
+        Redi::FVertex v3 {Position + Vector3(0.5f,0,0.5f), Vector3(0,1,0), Vector2(1,0)};
+        Redi::FVertex v4 {Position + Vector3(0.5f,0,-0.5f), Vector3(0,1,0), Vector2(1,1)};
+        _figure_mesh->AddFace(v1, v2, v3, v4);
+        }
+        break;
+    case Redi::FD_DOWN:
+        //bottom
+        {
+        Redi::FVertex v1 {Position + Vector3(0.5f,0,-0.5f), Vector3(0,-1,0), Vector2(1,1)};
+        Redi::FVertex v2 {Position + Vector3(0.5f,0,0.5f), Vector3(0,-1,0), Vector2(1,0)};
+        Redi::FVertex v3 {Position + Vector3(-0.5f,0,0.5f), Vector3(0,-1,0), Vector2(0,0)};
+        Redi::FVertex v4 {Position + Vector3(-0.5f,0,-0.5f), Vector3(0,-1,0), Vector2(0,1)};
+        _figure_mesh->AddFace(v1, v2, v3, v4);
+        }
+        break;
+    }
+}
+
 void REApplication::CreateFigureBox()
 {
     _figure_mesh = new Redi::Figure(Redi::EFigureType::FT_QUAD);
-    //forward
-    {
-        Redi::FVertex v1 {Vector3(1,0,0), Vector3(0,0,1), Vector2(1,1)};
-        Redi::FVertex v2 {Vector3(1,1,0), Vector3(0,0,1), Vector2(1,0)};
-        Redi::FVertex v3 {Vector3(0,1,0), Vector3(0,0,1), Vector2(0,0)};
-        Redi::FVertex v4 {Vector3(0,0,0), Vector3(0,0,1), Vector2(0,1)};
-        _figure_mesh->AddFace(v1, v2, v3, v4);
-    }
-    
-    //backward
-    {
-        Redi::FVertex v1 {Vector3(0,0,1), Vector3(0,0,-1), Vector2(0,1)};
-        Redi::FVertex v2 {Vector3(0,1,1), Vector3(0,0,-1), Vector2(0,0)};
-        Redi::FVertex v3 {Vector3(1,1,1), Vector3(0,0,-1), Vector2(1,0)};
-        Redi::FVertex v4 {Vector3(1,0,1), Vector3(0,0,-1), Vector2(1,1)};
-        _figure_mesh->AddFace(v1, v2, v3, v4);
-    }
-    
-    //left
-    {
-        Redi::FVertex v1 {Vector3(0,0,1), Vector3(-1,0,0), Vector2(0,1)};
-        Redi::FVertex v2 {Vector3(0,1,1), Vector3(-1,0,0), Vector2(0,0)};
-        Redi::FVertex v3 {Vector3(0,1,0), Vector3(-1,0,0), Vector2(1,0)};
-        Redi::FVertex v4 {Vector3(0,0,0), Vector3(-1,0,0), Vector2(1,1)};
-        _figure_mesh->AddFace(v1, v2, v3, v4);
-    }
-
-    //right
-    {
-        Redi::FVertex v1 {Vector3(1,0,0), Vector3(1,0,0), Vector2(1,1)};
-        Redi::FVertex v2 {Vector3(1,1,0), Vector3(1,0,0), Vector2(1,0)};
-        Redi::FVertex v3 {Vector3(1,1,1), Vector3(1,0,0), Vector2(0,0)};
-        Redi::FVertex v4 {Vector3(1,0,1), Vector3(1,0,0), Vector2(0,1)};
-        _figure_mesh->AddFace(v1, v2, v3, v4);
-    }
-    
-    //top
-    {
-        Redi::FVertex v1 {Vector3(0,1,0), Vector3(0,1,0), Vector2(0,1)};
-        Redi::FVertex v2 {Vector3(0,1,1), Vector3(0,1,0), Vector2(0,0)};
-        Redi::FVertex v3 {Vector3(1,1,1), Vector3(0,1,0), Vector2(1,0)};
-        Redi::FVertex v4 {Vector3(1,1,0), Vector3(0,1,0), Vector2(1,1)};
-        _figure_mesh->AddFace(v1, v2, v3, v4);
-    }
-
-    {
-        Redi::FVertex v1 {Vector3(1,0,0), Vector3(0,-1,0), Vector2(1,1)};
-        Redi::FVertex v2 {Vector3(1,0,1), Vector3(0,-1,0), Vector2(1,0)};
-        Redi::FVertex v3 {Vector3(0,0,1), Vector3(0,-1,0), Vector2(0,0)};
-        Redi::FVertex v4 {Vector3(0,0,0), Vector3(0,-1,0), Vector2(0,1)};
-        _figure_mesh->AddFace(v1, v2, v3, v4);
-    }
+    CreateFaceDirection(Redi::EFaceDirection::FD_FORWARD, Vector3(0.5f, 0.5f, 0.0f));
+    CreateFaceDirection(Redi::EFaceDirection::FD_BACK, Vector3(0.5f, 0.5f, 1.0f));
+    CreateFaceDirection(Redi::EFaceDirection::FD_LEFT, Vector3(0.0f, 0.5f, 0.5f));
+    CreateFaceDirection(Redi::EFaceDirection::FD_RIGHT, Vector3(1.0f, 0.5f, 0.5f));
+    CreateFaceDirection(Redi::EFaceDirection::FD_UP, Vector3(0.5f, 1.0f, 0.5f));
+    CreateFaceDirection(Redi::EFaceDirection::FD_DOWN, Vector3(0.5f, 0.0f, 0.5f));
 }
 
 void REApplication::CreateConsoleAndDebugHud()
@@ -186,6 +209,14 @@ void REApplication::CreateScene()
     const auto staticModel = boxNode_->CreateComponent<StaticModel>();
     staticModel->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
     staticModel->SetMaterial(cache_->GetResource<Material>("Materials/DefaultGrey.xml"));
+
+    for(unsigned i=0; i<4; i++)
+    {
+        Node* n = scene_->CreateChild("node");
+        cubes.push_back(n);
+        n->CreateComponent<StaticModel>()->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
+        n->Scale(0.1f);
+    }
 
     gizmo_ = MakeShared<Gizmo>(context_);
 
@@ -268,6 +299,22 @@ void REApplication::SetEditorMode(Redi::EEditorMode editor_mode)
     _editor_mode = editor_mode;
 }
 
+void REApplication::CreateFigureBoxWithoutFace(Redi::FFace* face)
+{
+    ea::vector<Redi::EFaceDirection> directions = {Redi::FD_FORWARD, Redi::FD_BACK, Redi::FD_LEFT, Redi::FD_RIGHT, Redi::FD_UP, Redi::FD_DOWN};
+    Redi::EFaceDirection eDirection = _figure_mesh->GetFaceDirection(face);
+    Redi::EFaceDirection iDirection = _figure_mesh->InvertFaceDirection(eDirection);
+    Vector3 origin = face->boundingBox.Center() + face->normal/2.0f;
+    _figure_mesh->MoveFace(face->idx, face->normal);
+    for(Redi::EFaceDirection fDir : directions)
+    {
+        if(eDirection != fDir && iDirection != fDir)
+        {
+            CreateFaceDirection(fDir, origin + _figure_mesh->GetVector3(fDir)/2.0f);
+        }
+    }
+}
+
 void REApplication::MoveCamera(float deltaTime)
 {
     if (GetSubsystem<UI>()->GetFocusElement())
@@ -306,17 +353,9 @@ void REApplication::MoveCamera(float deltaTime)
         if (input->GetKeyPress(KEY_SPACE))
             drawDebug_ = !drawDebug_;
 
-        /*
-        if (Raycast(250.0f))
-        {
-            if (input->GetKeyDown(KEY_E))
-            {
-                SetEditorMode(Redi::EEditorMode::EM_EXTRUDE);
-            }
-        }
-        */
     }
 
+    
     auto* ui = GetSubsystem<UI>();
     IntVector2 pos = ui->GetCursorPosition();
     // Check the cursor is visible and there is no UI element in front of the cursor
@@ -331,7 +370,22 @@ void REApplication::MoveCamera(float deltaTime)
     auto* graphics = GetSubsystem<Graphics>();
     auto* camera = cameraNode_->GetComponent<Camera>();
     Ray cameraRay = camera->GetScreenRay((float)pos.x_ / graphics->GetWidth(), (float)pos.y_ / graphics->GetHeight());
-    _figure_mesh->TraceLine(cameraRay.origin_, cameraRay.direction_, 250.0f);
+    if(_figure_mesh->TraceLine(cameraRay.origin_, cameraRay.direction_, 250.0f, hitPos))
+    {
+        if (_editor_mode != Redi::EM_EXTRUDE && input->GetKeyPress(KEY_E))
+        {
+            SetEditorMode(Redi::EEditorMode::EM_EXTRUDE);
+            Redi::FFace* face = _figure_mesh->GetSelectedFace();
+            CreateFigureBoxWithoutFace(face);
+            SetEditorMode(Redi::EEditorMode::EM_SELECT);
+        }
+    }
+
+    /*
+    if (Raycast(250.0f))
+    {
+    }
+    */
 }
 
 void REApplication::RenderUi(float deltaTime)
@@ -368,7 +422,7 @@ void REApplication::RenderUi(float deltaTime)
             metricsOpen_ ^= true;
         
         ui::Text(cameraNode_->GetPosition().ToString().c_str());
-        ui::Text(cameraNode_->GetDirection().ToString().c_str());
+        ui::Text(std::to_string(_figure_mesh->faces.size()).c_str());
 
         gizmo_->RenderUI();
     }
@@ -420,6 +474,8 @@ Redi::FFace REApplication::CreateFace(unsigned face_index)
     face.vertices.push_back(v1);
     face.vertices.push_back(v2);
     face.vertices.push_back(v3);
+    face.normal = _figure_mesh->GetFaceNormal({v1,v2,v3});
+    face.boundingBox = _figure_mesh->CalculateMinMax({v1, v2, v3});
 
     return face;
 }
@@ -492,6 +548,7 @@ bool REApplication::Raycast(float maxDistance)
                 result.position_.DistanceToPoint(face.vertices[2].position)
                 );
             const float vec_length = vec.Length();
+            
 
             if(face_index == 0)
             {
@@ -504,6 +561,9 @@ bool REApplication::Raycast(float maxDistance)
                 current_face = face;
             }
         }
+
+        //Vector3 normal = _figure_mesh->GetFaceNormal(current_face.vertices);
+        hitPos -= (hitPos - current_face.boundingBox.Center());
         
         return true;
     }
@@ -698,6 +758,27 @@ void REApplication::HandlePostRenderUpdate(StringHash eventType, VariantMap& eve
         }
 
         _figure_mesh->render(dbgRenderer);
+        if(Redi::FFace* face = _figure_mesh->GetSelectedFace())
+        {
+            Vector3 Rotation = cameraNode_->GetRotation().EulerAngles();
+            unsigned i=0;
+            for(Redi::FVertex vert : face->vertices)
+            {
+                cubes[i]->SetEnabled(true);
+                cubes[i]->SetWorldPosition(vert.position);
+                cubes[i]->SetRotation(Quaternion(Vector3(Rotation.x_, Rotation.y_, 0)));
+                ++i;
+            }
+        }
+        else
+        {
+            for(unsigned i=0; i<cubes.size(); ++i)
+            {
+                cubes[i]->SetEnabled(false);
+                //cubes[i]->SetWorldPosition(Vector3::ZERO);
+                //cubes[i]->SetRotation(Quaternion::IDENTITY);
+            }
+        }
 
         if (current_face.idx >= 0 && current_face.idx < max_faces_in_model)
         {
@@ -716,6 +797,7 @@ void REApplication::HandlePostRenderUpdate(StringHash eventType, VariantMap& eve
 
             dbgRenderer->AddPolygon(rect_pos[0], rect_pos[1], rect_pos[2], rect_pos[3], Color::GRAY, false);
         }
+        dbgRenderer->AddCross(hitPos, 0.5f, Color::GREEN, true);
     }
 }
 

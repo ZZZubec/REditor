@@ -2,6 +2,7 @@
 
 #include <Urho3D/Core/CoreEvents.h>
 #include <Urho3D/Engine/EngineDefs.h>
+#include <Urho3D/Engine/Application.h>
 #include <Urho3D/Graphics/Octree.h>
 #include <Urho3D/Graphics/Renderer.h>
 #include <Urho3D/Graphics/StaticModel.h>
@@ -9,6 +10,7 @@
 #include <Urho3D/Graphics/Model.h>
 #include <Urho3D/Graphics/Camera.h>
 #include <Urho3D/Input/InputConstants.h>
+#include <Urho3D/Input/FreeFlyController.h>
 #include <Urho3D/Resource/ResourceCache.h>
 #include <Urho3D/SystemUI/Console.h>
 #include <Urho3D/Graphics/IndexBuffer.h>
@@ -40,7 +42,6 @@ void REApplication::Setup()
 
     if (!engineParameters_.contains(Urho3D::EP_RESOURCE_PREFIX_PATHS))
         engineParameters_[Urho3D::EP_RESOURCE_PREFIX_PATHS] = ";..;../..";
-
 }
 
 void REApplication::Start()
@@ -49,6 +50,8 @@ void REApplication::Start()
     
     // Create scene providing a colored background.
     CreateScene();
+
+    SetupViewport();
 
     // Finally subscribe to the update event. Note that by subscribing events at this point we have already missed some events
     // like the ScreenMode event sent by the Graphics subsystem when opening the application window. To catch those as well we
@@ -200,9 +203,9 @@ void REApplication::CreateScene()
     cameraNode_ = scene_->CreateChild("Camera");
     auto camera = cameraNode_->CreateComponent<Camera>();
     camera->SetFarClip(300.0f);
-    GetSubsystem<Renderer>()->SetViewport(0, new Viewport(context_, scene_, camera));
     cameraNode_->SetPosition(Vector3(0.0f, 5.0f, -5.0f));
     cameraNode_->SetDirection(Vector3(-0.01f, -0.7f, 0.6f));
+    cameraNode_->CreateComponent<FreeFlyController>();
 
     boxNode_ = scene_->CreateChild("Box");
     boxNode_->SetPosition(Vector3(10,0, 10));
@@ -215,12 +218,29 @@ void REApplication::CreateScene()
         Node* n = scene_->CreateChild("node");
         cubes.push_back(n);
         n->CreateComponent<StaticModel>()->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
-        n->Scale(0.1f);
+        n->Scale(Vector3(0.1f, 0.1f, 0.0001f));
     }
 
     gizmo_ = MakeShared<Gizmo>(context_);
 
     //this->ReadFile("Scenes/RenderingShowcase_2_BakedDirect.xml");
+}
+
+void REApplication::SetViewport(unsigned index, Viewport* viewport)
+{
+    if (auto* renderer = GetSubsystem<Renderer>())
+    {
+        renderer->SetViewport(index, viewport);
+    }
+}
+
+void REApplication::SetupViewport()
+{
+    auto* renderer = GetSubsystem<Renderer>();
+
+    // Set up a viewport to the Renderer subsystem so that the 3D scene can be seen
+    SharedPtr<Viewport> viewport(new Viewport(context_, scene_, cameraNode_->GetComponent<Camera>()));
+    SetViewport(0, viewport);
 }
 
 void REApplication::ReadFile(const ea::string Filename)
@@ -290,7 +310,7 @@ void REApplication::OnUpdate(StringHash, VariantMap& eventData)
 {
     float deltaTime = eventData[Update::P_TIMESTEP].GetFloat();
 
-    MoveCamera(deltaTime);
+    TraceLine(deltaTime);
     RenderUi(deltaTime);
 }
 
@@ -315,52 +335,9 @@ void REApplication::CreateFigureBoxWithoutFace(Redi::FFace* face)
     }
 }
 
-void REApplication::MoveCamera(float deltaTime)
+void REApplication::TraceLine(float deltaTime)
 {
-    if (GetSubsystem<UI>()->GetFocusElement())
-        return;
-
     auto* input = GetSubsystem<Input>();
-
-    // Movement speed as world units per second
-    const float MOVE_SPEED = 20.0f;
-    // Mouse sensitivity as degrees per pixel
-    const float MOUSE_SENSITIVITY = 0.1f;
-
-    // Use this frame's mouse motion to adjust camera node yaw and pitch. Clamp the pitch between -90 and 90 degrees
-    IntVector2 mouseMove = input->GetMouseMove();
-    if(useMouseMode_ == MouseMode::MM_RELATIVE)
-    {
-        yaw_ += MOUSE_SENSITIVITY * mouseMove.x_;
-        pitch_ += MOUSE_SENSITIVITY * mouseMove.y_;
-        pitch_ = Clamp(pitch_, -90.0f, 90.0f);
-
-        // Construct new orientation for the camera scene node from yaw and pitch. Roll is fixed to zero
-        cameraNode_->SetRotation(Quaternion(pitch_, yaw_, 0.0));
-        
-
-        // Read WASD keys and move the camera scene node to the corresponding direction if they are pressed
-        if (input->GetKeyDown(KEY_W))
-            cameraNode_->Translate(Vector3::FORWARD * MOVE_SPEED * deltaTime);
-        if (input->GetKeyDown(KEY_S))
-            cameraNode_->Translate(Vector3::BACK * MOVE_SPEED * deltaTime);
-        if (input->GetKeyDown(KEY_A))
-            cameraNode_->Translate(Vector3::LEFT * MOVE_SPEED * deltaTime);
-        if (input->GetKeyDown(KEY_D))
-            cameraNode_->Translate(Vector3::RIGHT * MOVE_SPEED * deltaTime);
-
-        // Toggle debug geometry with space
-        if (input->GetKeyPress(KEY_SPACE))
-            drawDebug_ = !drawDebug_;
-
-    }
-
-    
-    auto* ui = GetSubsystem<UI>();
-    IntVector2 pos = ui->GetCursorPosition();
-    // Check the cursor is visible and there is no UI element in front of the cursor
-    if ((ui->GetCursor() && !ui->GetCursor()->IsVisible()) || ui->GetElementAt(pos, true))
-        return;
 
     current_node = nullptr;
     current_face = Redi::FFace();
@@ -369,8 +346,8 @@ void REApplication::MoveCamera(float deltaTime)
 
     auto* graphics = GetSubsystem<Graphics>();
     auto* camera = cameraNode_->GetComponent<Camera>();
-    Ray cameraRay = camera->GetScreenRay((float)pos.x_ / graphics->GetWidth(), (float)pos.y_ / graphics->GetHeight());
-    if(_figure_mesh->TraceLine(cameraRay.origin_, cameraRay.direction_, 250.0f, hitPos))
+    Ray cameraRay = camera->GetScreenRayFromMouse();
+    if(_figure_mesh->TraceLine(cameraRay, 250.0f, hitPos))
     {
         if (_editor_mode != Redi::EM_EXTRUDE && input->GetKeyPress(KEY_E))
         {
@@ -484,12 +461,6 @@ bool REApplication::Raycast(float maxDistance)
 {
     hitDrawable = nullptr;
 
-    auto* ui = GetSubsystem<UI>();
-    IntVector2 pos = ui->GetCursorPosition();
-    // Check the cursor is visible and there is no UI element in front of the cursor
-    if ((ui->GetCursor() && !ui->GetCursor()->IsVisible()) || ui->GetElementAt(pos, true))
-        return false;
-
     current_node = nullptr;
     current_face = Redi::FFace();
     _indexes.clear();
@@ -497,7 +468,7 @@ bool REApplication::Raycast(float maxDistance)
 
     auto* graphics = GetSubsystem<Graphics>();
     auto* camera = cameraNode_->GetComponent<Camera>();
-    Ray cameraRay = camera->GetScreenRay((float)pos.x_ / graphics->GetWidth(), (float)pos.y_ / graphics->GetHeight());
+    Ray cameraRay = camera->GetScreenRayFromMouse();
     // Pick only geometry objects, not eg. zones or lights, only get the first (closest) hit
     ea::vector<RayQueryResult> results;
     RayOctreeQuery query(results, cameraRay, RAY_TRIANGLE, maxDistance, DRAWABLE_GEOMETRY);
@@ -766,7 +737,7 @@ void REApplication::HandlePostRenderUpdate(StringHash eventType, VariantMap& eve
             {
                 cubes[i]->SetEnabled(true);
                 cubes[i]->SetWorldPosition(vert.position);
-                cubes[i]->SetRotation(Quaternion(Vector3(Rotation.x_, Rotation.y_, 0)));
+                cubes[i]->SetDirection(cameraNode_->GetDirection());
                 ++i;
             }
         }

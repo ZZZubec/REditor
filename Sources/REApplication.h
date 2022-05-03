@@ -5,6 +5,7 @@
 #include <Urho3D/Input/Input.h>
 #include <Urho3D/UI/Text.h>
 #include <Urho3D/Graphics/Model.h>
+#include <Urho3D/Graphics/Viewport.h>
 
 #include <Urho3D/SystemUI/SystemMessageBox.h>
 #include <Urho3D/SystemUI/Gizmo.h>
@@ -25,9 +26,12 @@ public:
     void Setup() override;
     /// Setup after engine initialization and before running the main loop.
     void Start() override;
+
     void CreateFaceDirection(Redi::EFaceDirection eDirection, const Vector3& Position);
     void CreateFigureBox();
+    
     void CreateConsoleAndDebugHud();
+
     /// Tear down any state that would pollute next initialization of the sample.
     void Stop() override;
 
@@ -37,6 +41,9 @@ private:
 
     /// Creates a scene. Only required to provide background color that is not black.
     void CreateScene();
+
+    void SetViewport(unsigned index, Viewport* viewport);
+    void SetupViewport();
     
     /// Subscribe to application-wide logic update events.
     void SubscribeToEvents();
@@ -51,7 +58,7 @@ private:
 
     void SetEditorMode(Redi::EEditorMode editor_mode);
     void CreateFigureBoxWithoutFace(Redi::FFace* face);
-    void MoveCamera(float deltaTime);
+    void TraceLine(float deltaTime);
     /// Assemble debug UI and handle UI events.
     void RenderUi(float deltaTime);
 

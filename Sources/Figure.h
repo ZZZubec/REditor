@@ -1,7 +1,9 @@
 ﻿#pragma once
 #include "Structures.h"
 #include "EASTL/vector.h"
-#include "Graphics/DebugRenderer.h"
+
+#include <Urho3D/Math/Ray.h>
+#include <Urho3D/Graphics/DebugRenderer.h>
 
 namespace Redi
 {
@@ -34,7 +36,9 @@ public:
     BoundingBox CalculateMinMax(const ea::vector<FVertex>& vertices) const;
 
     float GetDistance(const FFace& face, const Vector3& origin) const;
+
     bool TraceLine(const Vector3& CameraPosition, const Vector3& CameraDirection, const float maxDistance, Vector3& hitPos);
+    bool TraceLine(Ray CameraRay, const float maxDistance, Vector3& hitPos);
 
     Redi::FFace* GetSelectedFace();
     Redi::EFaceDirection GetFaceDirection(FFace* face);

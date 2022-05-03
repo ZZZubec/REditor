@@ -2,8 +2,6 @@
 
 #include <Urho3D/IO/Log.h>
 
-#include "Math/Ray.h"
-
 using namespace Redi;
 
 Figure::Figure(EFigureType stype)
@@ -171,8 +169,13 @@ float Figure::GetDistance(const FFace& face, const Vector3& origin) const
 
 bool Figure::TraceLine(const Vector3& CameraPosition, const Vector3& CameraDirection, const float maxDistance, Vector3& hitPos)
 {
+    return TraceLine(Ray(CameraPosition, CameraDirection), maxDistance, hitPos);
+}
+
+bool Figure::TraceLine(Ray CameraRay, const float maxDistance, Vector3& hitPos)
+{
     Vector3 dotp = Vector3::UP;
-    float v = dotp.DotProduct(CameraDirection);
+    float v = dotp.DotProduct(CameraRay.origin_);
 
     Vector3 normal(0,0,0);
     if(Abs(v) >= 0.5f)
@@ -195,17 +198,15 @@ bool Figure::TraceLine(const Vector3& CameraPosition, const Vector3& CameraDirec
 
     selected_faces.clear();
 
-    Ray cameraRay(CameraPosition, CameraDirection);
-
     ea::vector<FFaceRay> shotFaces;
 
     for(unsigned i=0; i<faces.size(); ++i)
     {
-        float v = cameraRay.HitDistance(faces[i].boundingBox);
+        float v = CameraRay.HitDistance(faces[i].boundingBox);
         if(v > 0.1f && v < maxDistance)
         {
             //URHO3D_LOGINFO("face:{}, v:{}", faces[i].idx, v);
-            const FFaceRay fRay = {i, GetDistance(faces[i], CameraPosition)};
+            const FFaceRay fRay = {i, GetDistance(faces[i], CameraRay.origin_)};
             shotFaces.push_back(fRay);
         }
     }
@@ -216,8 +217,8 @@ bool Figure::TraceLine(const Vector3& CameraPosition, const Vector3& CameraDirec
     {
         shotFaces.resize(1);
         FFace face = faces[shotFaces[0].array_index];
-        hitPos = Vector3(cameraRay.origin_ + cameraRay.direction_ * shotFaces[0].distance);
-        //hitPos -= Vector3(cameraRay.direction_ * Abs(Vector3(hitPos - face.boundingBox.Center()).Length()));
+        hitPos = Vector3(CameraRay.origin_ + CameraRay.direction_ * shotFaces[0].distance);
+        hitPos -= Vector3(CameraRay.direction_ * Abs(Vector3(hitPos - face.boundingBox.Center()).Length()));
         selected_faces.push_back(face.idx);
     }
 

@@ -58,6 +58,7 @@ private:
 
     void SetEditorMode(Redi::EEditorMode editor_mode);
     void CreateFigureBoxWithoutFace(Redi::FFace* face);
+    void OnChangeTraceNode(Node* old, Node* current);
     void TraceLine(float deltaTime);
     /// Assemble debug UI and handle UI events.
     void RenderUi(float deltaTime);
@@ -65,7 +66,11 @@ private:
     void InitMouseMode(MouseMode mode);
 
     Redi::FFace CreateFace(unsigned face_index);
+    
     bool Raycast(float maxDistance);
+    
+    void RepaintFace();
+
     void HandleMouseModeRequest(StringHash /*eventType*/, VariantMap& eventData);
     void HandleMouseModeChange(StringHash /*eventType*/, VariantMap& eventData);
     Vector3 MinVector(const Vector3& a, const Vector3& b);
@@ -112,4 +117,7 @@ private:
 
     Redi::Figure* _figure_mesh;
     ea::vector<Node*> cubes;
+
+    ea::vector<unsigned> selected_vertex;
+    ea::vector<Material*> materials_;
 };

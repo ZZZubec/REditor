@@ -211,13 +211,20 @@ void REApplication::CreateScene()
     boxNode_->SetPosition(Vector3(10,0, 10));
     const auto staticModel = boxNode_->CreateComponent<StaticModel>();
     staticModel->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
-    staticModel->SetMaterial(cache_->GetResource<Material>("Materials/DefaultGrey.xml"));
+    
+    materials_.clear();
+    materials_.resize(2);
+    materials_[0] = cache_->GetResource<Material>("Materials/GreenTransparent.xml");
+    materials_[1] = cache_->GetResource<Material>("Materials/DefaultWhite.xml");
+    staticModel->SetMaterial(materials_[1]);
 
     for(unsigned i=0; i<4; i++)
     {
         Node* n = scene_->CreateChild("node");
         cubes.push_back(n);
-        n->CreateComponent<StaticModel>()->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
+        auto* st = n->CreateComponent<StaticModel>();
+        st->SetModel(cache_->GetResource<Model>("Models/Box.mdl"));
+        st->SetMaterial(materials_[0]);
         n->Scale(Vector3(0.1f, 0.1f, 0.0001f));
     }
 
@@ -335,10 +342,36 @@ void REApplication::CreateFigureBoxWithoutFace(Redi::FFace* face)
     }
 }
 
+void REApplication::OnChangeTraceNode(Node* old, Node* current)
+{
+    if (Redi::FFace* face = _figure_mesh->GetSelectedFace())
+    {
+        Vector3 Rotation = cameraNode_->GetRotation().EulerAngles();
+        unsigned i = 0;
+        for (Redi::FVertex vert : face->vertices)
+        {
+            cubes[i]->SetEnabled(true);
+            cubes[i]->SetWorldPosition(vert.position);
+            cubes[i]->SetDirection(cameraNode_->GetDirection());
+            ++i;
+        }
+    }
+    else
+    {
+        for (unsigned i = 0; i < cubes.size(); ++i)
+        {
+            cubes[i]->SetEnabled(false);
+        }
+    }
+    RepaintFace();
+}
+
 void REApplication::TraceLine(float deltaTime)
 {
     auto* input = GetSubsystem<Input>();
 
+    Node* old_node = current_node;
+    Redi::FFace* old_face = _figure_mesh->GetSelectedFace();
     current_node = nullptr;
     current_face = Redi::FFace();
     _indexes.clear();
@@ -347,8 +380,13 @@ void REApplication::TraceLine(float deltaTime)
     auto* graphics = GetSubsystem<Graphics>();
     auto* camera = cameraNode_->GetComponent<Camera>();
     Ray cameraRay = camera->GetScreenRayFromMouse();
+    selected_vertex.clear();
     if(_figure_mesh->TraceLine(cameraRay, 250.0f, hitPos))
     {
+        if (old_node != current_node || old_face != _figure_mesh->GetSelectedFace())
+        {
+            OnChangeTraceNode(old_node, current_node);
+        }
         if (_editor_mode != Redi::EM_EXTRUDE && input->GetKeyPress(KEY_E))
         {
             SetEditorMode(Redi::EEditorMode::EM_EXTRUDE);
@@ -542,6 +580,27 @@ bool REApplication::Raycast(float maxDistance)
     return false;
 }
 
+void REApplication::RepaintFace()
+{
+    if (Redi::FFace* face = _figure_mesh->GetSelectedFace())
+    {
+        unsigned i = 0;
+        for (unsigned i = 0; i < face->vertices.size(); ++i)
+        {
+            cubes[i]->SetWorldPosition(face->vertices[i].position);
+            cubes[i]->SetDirection(cameraNode_->GetDirection());
+            if (selected_vertex.contains(i))
+            {
+                cubes[i]->GetComponent<StaticModel>()->SetMaterial(materials_[1]);
+            }
+            else
+            {
+                cubes[i]->GetComponent<StaticModel>()->SetMaterial(materials_[0]);
+            }
+        }
+    }
+}
+
 void REApplication::HandleMouseModeRequest(StringHash, VariantMap& eventData)
 {
 #if URHO3D_SYSTEMUI
@@ -553,7 +612,19 @@ void REApplication::HandleMouseModeRequest(StringHash, VariantMap& eventData)
 
     unsigned buttonID = eventData[MouseButtonDown::P_BUTTON].GetInt();
     URHO3D_LOGINFO("mouse:{}", buttonID);
-    if(buttonID == 4)
+    if (buttonID == 1)
+    {
+        if (_figure_mesh->GetSelectedFace())
+        {
+            selected_vertex.clear();
+            for (unsigned i = 0; i < _figure_mesh->GetSelectedFace()->vertices.size(); ++i)
+            {
+                selected_vertex.push_back(i);
+            }
+        }
+        RepaintFace();
+    }
+    else if(buttonID == 4)
     {
         if(useMouseMode_ != Urho3D::MM_FREE)
         {
@@ -729,26 +800,9 @@ void REApplication::HandlePostRenderUpdate(StringHash eventType, VariantMap& eve
         }
 
         _figure_mesh->render(dbgRenderer);
-        if(Redi::FFace* face = _figure_mesh->GetSelectedFace())
+        for(unsigned i=0; i<cubes.size(); ++i)
         {
-            Vector3 Rotation = cameraNode_->GetRotation().EulerAngles();
-            unsigned i=0;
-            for(Redi::FVertex vert : face->vertices)
-            {
-                cubes[i]->SetEnabled(true);
-                cubes[i]->SetWorldPosition(vert.position);
-                cubes[i]->SetDirection(cameraNode_->GetDirection());
-                ++i;
-            }
-        }
-        else
-        {
-            for(unsigned i=0; i<cubes.size(); ++i)
-            {
-                cubes[i]->SetEnabled(false);
-                //cubes[i]->SetWorldPosition(Vector3::ZERO);
-                //cubes[i]->SetRotation(Quaternion::IDENTITY);
-            }
+            cubes[i]->SetDirection(cameraNode_->GetDirection());
         }
 
         if (current_face.idx >= 0 && current_face.idx < max_faces_in_model)

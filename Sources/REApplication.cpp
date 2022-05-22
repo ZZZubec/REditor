@@ -47,6 +47,8 @@ void REApplication::Setup()
 void REApplication::Start()
 {
     CreateConsoleAndDebugHud();
+
+    LoadResorces();
     
     // Create scene providing a colored background.
     CreateScene();
@@ -76,76 +78,76 @@ void REApplication::CreateFaceDirection(Redi::EFaceDirection eDirection, const V
         break;
     case Redi::FD_FORWARD:
         //forward
-        {
-            Redi::FVertex v1 {Position + Vector3(0.5f,-0.5f,0), Vector3(0,0,1), Vector2(1,1)};
-            Redi::FVertex v2 {Position + Vector3(0.5f,0.5f,0), Vector3(0,0,1), Vector2(1,0)};
-            Redi::FVertex v3 {Position + Vector3(-0.5f,0.5f,0), Vector3(0,0,1), Vector2(0,0)};
-            Redi::FVertex v4 {Position + Vector3(-0.5f,-0.5f,0), Vector3(0,0,1), Vector2(0,1)};
-            _figure_mesh->AddFace(v1, v2, v3, v4);
-        }
-        break;
+    {
+        Redi::FVertex v1{ Position + Vector3(0.5f,-0.5f,-0.5f), Vector3(0,0,1), Vector2(1,1) };
+        Redi::FVertex v2{ Position + Vector3(0.5f,0.5f,-0.5f), Vector3(0,0,1), Vector2(1,0) };
+        Redi::FVertex v3{ Position + Vector3(-0.5f,0.5f,-0.5f), Vector3(0,0,1), Vector2(0,0) };
+        Redi::FVertex v4{ Position + Vector3(-0.5f,-0.5f,-0.5f), Vector3(0,0,1), Vector2(0,1) };
+        figure_mesh_->AddFace(v1, v2, v3, v4);
+    }
+    break;
     case Redi::FD_BACK:
         //backward
-        {
-            Redi::FVertex v1 {Position + Vector3(-0.5f,-0.5f,0), Vector3(0,0,-1), Vector2(0,1)};
-            Redi::FVertex v2 {Position + Vector3(-0.5f,0.5f,0), Vector3(0,0,-1), Vector2(0,0)};
-            Redi::FVertex v3 {Position + Vector3(0.5f,0.5f,0), Vector3(0,0,-1), Vector2(1,0)};
-            Redi::FVertex v4 {Position + Vector3(0.5f,-0.5f,0), Vector3(0,0,-1), Vector2(1,1)};
-            _figure_mesh->AddFace(v1, v2, v3, v4);
-        }
-        break;
+    {
+        Redi::FVertex v1{ Position + Vector3(-0.5f,-0.5f,0.5f), Vector3(0,0,-1), Vector2(0,1) };
+        Redi::FVertex v2{ Position + Vector3(-0.5f,0.5f,0.5f), Vector3(0,0,-1), Vector2(0,0) };
+        Redi::FVertex v3{ Position + Vector3(0.5f,0.5f,0.5f), Vector3(0,0,-1), Vector2(1,0) };
+        Redi::FVertex v4{ Position + Vector3(0.5f,-0.5f,0.5f), Vector3(0,0,-1), Vector2(1,1) };
+        figure_mesh_->AddFace(v1, v2, v3, v4);
+    }
+    break;
     case Redi::FD_LEFT:
         //left
-        {
-        Redi::FVertex v1 {Position + Vector3(0,-0.5f,0.5f), Vector3(-1,0,0), Vector2(0,1)};
-        Redi::FVertex v2 {Position + Vector3(0,0.5f,0.5f), Vector3(-1,0,0), Vector2(0,0)};
-        Redi::FVertex v3 {Position + Vector3(0,0.5f,-0.5f), Vector3(-1,0,0), Vector2(1,0)};
-        Redi::FVertex v4 {Position + Vector3(0,-0.5f,-0.5f), Vector3(-1,0,0), Vector2(1,1)};
-        _figure_mesh->AddFace(v1, v2, v3, v4);
-        }
-        break;
+    {
+        Redi::FVertex v1{ Position + Vector3(-0.5f,-0.5f,0.5f), Vector3(-1,0,0), Vector2(0,1) };
+        Redi::FVertex v2{ Position + Vector3(-0.5f,0.5f,0.5f), Vector3(-1,0,0), Vector2(0,0) };
+        Redi::FVertex v3{ Position + Vector3(-0.5f,0.5f,-0.5f), Vector3(-1,0,0), Vector2(1,0) };
+        Redi::FVertex v4{ Position + Vector3(-0.5f,-0.5f,-0.5f), Vector3(-1,0,0), Vector2(1,1) };
+        figure_mesh_->AddFace(v1, v2, v3, v4);
+    }
+    break;
     case Redi::FD_RIGHT:
         //right
-        {
-            Redi::FVertex v1 {Position + Vector3(0,-0.5f,-0.5f), Vector3(1,0,0), Vector2(1,1)};
-            Redi::FVertex v2 {Position + Vector3(0,0.5f,-0.5f), Vector3(1,0,0), Vector2(1,0)};
-            Redi::FVertex v3 {Position + Vector3(0,0.5f,0.5f), Vector3(1,0,0), Vector2(0,0)};
-            Redi::FVertex v4 {Position + Vector3(0,-0.5f,0.5f), Vector3(1,0,0), Vector2(0,1)};
-            _figure_mesh->AddFace(v1, v2, v3, v4);
-        }
-        break;
+    {
+        Redi::FVertex v1{ Position + Vector3(0.5f,-0.5f,-0.5f), Vector3(1,0,0), Vector2(1,1) };
+        Redi::FVertex v2{ Position + Vector3(0.5f,0.5f,-0.5f), Vector3(1,0,0), Vector2(1,0) };
+        Redi::FVertex v3{ Position + Vector3(0.5f,0.5f,0.5f), Vector3(1,0,0), Vector2(0,0) };
+        Redi::FVertex v4{ Position + Vector3(0.5f,-0.5f,0.5f), Vector3(1,0,0), Vector2(0,1) };
+        figure_mesh_->AddFace(v1, v2, v3, v4);
+    }
+    break;
     case Redi::FD_UP:
         //top
-        {
-        Redi::FVertex v1 {Position + Vector3(-0.5f,0,-0.5f), Vector3(0,1,0), Vector2(0,1)};
-        Redi::FVertex v2 {Position + Vector3(-0.5f,0,0.5f), Vector3(0,1,0), Vector2(0,0)};
-        Redi::FVertex v3 {Position + Vector3(0.5f,0,0.5f), Vector3(0,1,0), Vector2(1,0)};
-        Redi::FVertex v4 {Position + Vector3(0.5f,0,-0.5f), Vector3(0,1,0), Vector2(1,1)};
-        _figure_mesh->AddFace(v1, v2, v3, v4);
-        }
-        break;
+    {
+        Redi::FVertex v1{ Position + Vector3(-0.5f,+0.5f,-0.5f), Vector3(0,1,0), Vector2(0,1) };
+        Redi::FVertex v2{ Position + Vector3(-0.5f,+0.5f,0.5f), Vector3(0,1,0), Vector2(0,0) };
+        Redi::FVertex v3{ Position + Vector3(0.5f,+0.5f,0.5f), Vector3(0,1,0), Vector2(1,0) };
+        Redi::FVertex v4{ Position + Vector3(0.5f,+0.5f,-0.5f), Vector3(0,1,0), Vector2(1,1) };
+        figure_mesh_->AddFace(v1, v2, v3, v4);
+    }
+    break;
     case Redi::FD_DOWN:
         //bottom
-        {
-        Redi::FVertex v1 {Position + Vector3(0.5f,0,-0.5f), Vector3(0,-1,0), Vector2(1,1)};
-        Redi::FVertex v2 {Position + Vector3(0.5f,0,0.5f), Vector3(0,-1,0), Vector2(1,0)};
-        Redi::FVertex v3 {Position + Vector3(-0.5f,0,0.5f), Vector3(0,-1,0), Vector2(0,0)};
-        Redi::FVertex v4 {Position + Vector3(-0.5f,0,-0.5f), Vector3(0,-1,0), Vector2(0,1)};
-        _figure_mesh->AddFace(v1, v2, v3, v4);
-        }
-        break;
+    {
+        Redi::FVertex v1{ Position + Vector3(0.5f,-0.5f,-0.5f), Vector3(0,-1,0), Vector2(1,1) };
+        Redi::FVertex v2{ Position + Vector3(0.5f,-0.5f,0.5f), Vector3(0,-1,0), Vector2(1,0) };
+        Redi::FVertex v3{ Position + Vector3(-0.5f,-0.5f,0.5f), Vector3(0,-1,0), Vector2(0,0) };
+        Redi::FVertex v4{ Position + Vector3(-0.5f,-0.5f,-0.5f), Vector3(0,-1,0), Vector2(0,1) };
+        figure_mesh_->AddFace(v1, v2, v3, v4);
+    }
+    break;
     }
 }
 
 void REApplication::CreateFigureBox()
 {
-    _figure_mesh = new Redi::Figure(Redi::EFigureType::FT_QUAD);
-    CreateFaceDirection(Redi::EFaceDirection::FD_FORWARD, Vector3(0.5f, 0.5f, 0.0f));
-    CreateFaceDirection(Redi::EFaceDirection::FD_BACK, Vector3(0.5f, 0.5f, 1.0f));
-    CreateFaceDirection(Redi::EFaceDirection::FD_LEFT, Vector3(0.0f, 0.5f, 0.5f));
-    CreateFaceDirection(Redi::EFaceDirection::FD_RIGHT, Vector3(1.0f, 0.5f, 0.5f));
-    CreateFaceDirection(Redi::EFaceDirection::FD_UP, Vector3(0.5f, 1.0f, 0.5f));
-    CreateFaceDirection(Redi::EFaceDirection::FD_DOWN, Vector3(0.5f, 0.0f, 0.5f));
+    figure_mesh_ = new Redi::Figure(Redi::EFigureType::FT_QUAD);
+    CreateFaceDirection(Redi::EFaceDirection::FD_FORWARD, Vector3(0.5f, 0.5f, 0.5f));
+    CreateFaceDirection(Redi::EFaceDirection::FD_BACK, Vector3(0.5f, 0.5f, 0.5f));
+    CreateFaceDirection(Redi::EFaceDirection::FD_LEFT, Vector3(0.5f, 0.5f, 0.5f));
+    CreateFaceDirection(Redi::EFaceDirection::FD_RIGHT, Vector3(0.5f, 0.5f, 0.5f));
+    CreateFaceDirection(Redi::EFaceDirection::FD_UP, Vector3(0.5f, 0.5f, 0.5f));
+    CreateFaceDirection(Redi::EFaceDirection::FD_DOWN, Vector3(0.5f, 0.5f, 0.5f));
 }
 
 void REApplication::CreateConsoleAndDebugHud()
@@ -172,6 +174,12 @@ void REApplication::SubscribeToEvents()
     // Subscribe HandlePostRenderUpdate() function for processing the post-render update event, during which we request
     // debug geometry
     SubscribeToEvent(E_POSTRENDERUPDATE, URHO3D_HANDLER(REApplication, HandlePostRenderUpdate));
+}
+
+void REApplication::LoadResorces()
+{
+    auto* cache_ = GetSubsystem<ResourceCache>();
+    ballTexture_ = cache_->GetResource<Texture2D>("Urho2D/Ball.png");
 }
 
 void REApplication::CreateScene()
@@ -323,28 +331,28 @@ void REApplication::OnUpdate(StringHash, VariantMap& eventData)
 
 void REApplication::SetEditorMode(Redi::EEditorMode editor_mode)
 {
-    _editor_mode = editor_mode;
+    editor_mode_ = editor_mode;
 }
 
 void REApplication::CreateFigureBoxWithoutFace(Redi::FFace* face)
 {
     ea::vector<Redi::EFaceDirection> directions = {Redi::FD_FORWARD, Redi::FD_BACK, Redi::FD_LEFT, Redi::FD_RIGHT, Redi::FD_UP, Redi::FD_DOWN};
-    Redi::EFaceDirection eDirection = _figure_mesh->GetFaceDirection(face);
-    Redi::EFaceDirection iDirection = _figure_mesh->InvertFaceDirection(eDirection);
+    Redi::EFaceDirection eDirection = figure_mesh_->GetFaceDirection(face);
+    Redi::EFaceDirection iDirection = figure_mesh_->InvertFaceDirection(eDirection);
     Vector3 origin = face->boundingBox.Center() + face->normal/2.0f;
-    _figure_mesh->MoveFace(face->idx, face->normal);
+    figure_mesh_->MoveFace(face->idx, face->normal);
     for(Redi::EFaceDirection fDir : directions)
     {
         if(eDirection != fDir && iDirection != fDir)
         {
-            CreateFaceDirection(fDir, origin + _figure_mesh->GetVector3(fDir)/2.0f);
+            CreateFaceDirection(fDir, origin + figure_mesh_->GetVector3(fDir)/2.0f);
         }
     }
 }
 
 void REApplication::OnChangeTraceNode(Node* old, Node* current)
 {
-    if (Redi::FFace* face = _figure_mesh->GetSelectedFace())
+    if (Redi::FFace* face = figure_mesh_->GetSelectedFace())
     {
         Vector3 Rotation = cameraNode_->GetRotation().EulerAngles();
         unsigned i = 0;
@@ -371,26 +379,26 @@ void REApplication::TraceLine(float deltaTime)
     auto* input = GetSubsystem<Input>();
 
     Node* old_node = current_node;
-    Redi::FFace* old_face = _figure_mesh->GetSelectedFace();
+    Redi::FFace* old_face = figure_mesh_->GetSelectedFace();
     current_node = nullptr;
     current_face = Redi::FFace();
-    _indexes.clear();
-    _vertices.clear();
+    indexes_.clear();
+    vertices_.clear();
 
     auto* graphics = GetSubsystem<Graphics>();
     auto* camera = cameraNode_->GetComponent<Camera>();
     Ray cameraRay = camera->GetScreenRayFromMouse();
     selected_vertex.clear();
-    if(_figure_mesh->TraceLine(cameraRay, 250.0f, hitPos))
+    if(figure_mesh_->TraceLine(cameraRay, 250.0f, hitPos))
     {
-        if (old_node != current_node || old_face != _figure_mesh->GetSelectedFace())
+        if (old_node != current_node || old_face != figure_mesh_->GetSelectedFace())
         {
             OnChangeTraceNode(old_node, current_node);
         }
-        if (_editor_mode != Redi::EM_EXTRUDE && input->GetKeyPress(KEY_E))
+        if (editor_mode_ != Redi::EM_EXTRUDE && input->GetKeyPress(KEY_E))
         {
             SetEditorMode(Redi::EEditorMode::EM_EXTRUDE);
-            Redi::FFace* face = _figure_mesh->GetSelectedFace();
+            Redi::FFace* face = figure_mesh_->GetSelectedFace();
             CreateFigureBoxWithoutFace(face);
             SetEditorMode(Redi::EEditorMode::EM_SELECT);
         }
@@ -412,6 +420,7 @@ void REApplication::RenderUi(float deltaTime)
 
     ui::SetNextWindowSize(ImVec2(200, 300), ImGuiCond_FirstUseEver);
     ui::SetNextWindowPos(ImVec2(200, 300), ImGuiCond_FirstUseEver);
+    
     if (ui::Begin("Sample SystemUI", 0, ImGuiWindowFlags_NoSavedSettings))
     {
         if (messageBox_)
@@ -437,11 +446,45 @@ void REApplication::RenderUi(float deltaTime)
             metricsOpen_ ^= true;
         
         ui::Text(cameraNode_->GetPosition().ToString().c_str());
-        ui::Text(std::to_string(_figure_mesh->faces.size()).c_str());
+        ui::Text(std::to_string(figure_mesh_->faces.size()).c_str());
 
         gizmo_->RenderUI();
     }
     ui::End();
+
+    float _floatValue = 1.0f;
+    bool _showDemoWindow;
+    bool _showAnotherWindow;
+    float static _clearColor[3];
+
+    ImVec2 tex_size(20, 20);
+
+    if(ui::Begin("other"))
+    {
+        if(ballTexture_ != nullptr)
+        {
+            ui::SetCursorPos(Vector2(40, 20));
+            ui::Image(ballTexture_, tex_size);
+            ui::SetCursorPos(Vector2(20, 40));
+            ui::Image(ballTexture_, tex_size);
+            ui::SetCursorPos(Vector2(40, 40));
+            ui::Image(ballTexture_, tex_size);
+            ui::SetCursorPos(Vector2(60, 40));
+            ui::Image(ballTexture_, tex_size);
+            ui::SetCursorPos(Vector2(40, 60));
+            ui::Image(ballTexture_, tex_size);
+        }
+        ui::SliderFloat("Float", &_floatValue, 0.0f, 1.0f);
+        if(ui::ColorEdit3("Clear Color", _clearColor))
+            if(ui::Button("Test Window"))
+                _showDemoWindow ^= true;
+        if(ImGui::Button("Another Window"))
+            _showAnotherWindow ^= true;
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+            1000.0/double(ui::GetIO().Framerate), double(ImGui::GetIO().Framerate));
+    }
+    ui::End();
+    
     if (metricsOpen_)
         ui::ShowMetricsWindow(&metricsOpen_);
 }
@@ -480,17 +523,17 @@ void REApplication::InitMouseMode(MouseMode mode)
 Redi::FFace REApplication::CreateFace(unsigned face_index)
 {
     unsigned idx = face_index*3;
-    Redi::FVertex v1 {_vertices[_indexes[idx + 0]] };
-    Redi::FVertex v2 {_vertices[_indexes[idx + 1]] };
-    Redi::FVertex v3 {_vertices[_indexes[idx + 2]] };
+    Redi::FVertex v1 {vertices_[indexes_[idx + 0]] };
+    Redi::FVertex v2 {vertices_[indexes_[idx + 1]] };
+    Redi::FVertex v3 {vertices_[indexes_[idx + 2]] };
 
     Redi::FFace face;
     face.idx = face_index;
     face.vertices.push_back(v1);
     face.vertices.push_back(v2);
     face.vertices.push_back(v3);
-    face.normal = _figure_mesh->GetFaceNormal({v1,v2,v3});
-    face.boundingBox = _figure_mesh->CalculateMinMax({v1, v2, v3});
+    face.normal = figure_mesh_->GetFaceNormal({v1,v2,v3});
+    face.boundingBox = figure_mesh_->CalculateMinMax({v1, v2, v3});
 
     return face;
 }
@@ -501,8 +544,8 @@ bool REApplication::Raycast(float maxDistance)
 
     current_node = nullptr;
     current_face = Redi::FFace();
-    _indexes.clear();
-    _vertices.clear();
+    indexes_.clear();
+    vertices_.clear();
 
     auto* graphics = GetSubsystem<Graphics>();
     auto* camera = cameraNode_->GetComponent<Camera>();
@@ -524,7 +567,7 @@ bool REApplication::Raycast(float maxDistance)
         ea::vector<unsigned> inds = index_buffer->GetUnpackedData();
         for(unsigned i=0; i<inds.size(); i++)
         {
-            _indexes.push_back(inds[i]);
+            indexes_.push_back(inds[i]);
         }
         
 
@@ -540,7 +583,7 @@ bool REApplication::Raycast(float maxDistance)
             for (unsigned i = 0; i < numVertices; ++i)
             {
                 const Vector3& src = *reinterpret_cast<const Vector3*>(vertexData + i * vertexSize) * current_node->GetScale();
-                _vertices.push_back(src);
+                vertices_.push_back(src);
             }
             vertex_buffer->Unlock();
         }
@@ -582,7 +625,7 @@ bool REApplication::Raycast(float maxDistance)
 
 void REApplication::RepaintFace()
 {
-    if (Redi::FFace* face = _figure_mesh->GetSelectedFace())
+    if (Redi::FFace* face = figure_mesh_->GetSelectedFace())
     {
         unsigned i = 0;
         for (unsigned i = 0; i < face->vertices.size(); ++i)
@@ -614,10 +657,10 @@ void REApplication::HandleMouseModeRequest(StringHash, VariantMap& eventData)
     URHO3D_LOGINFO("mouse:{}", buttonID);
     if (buttonID == 1)
     {
-        if (_figure_mesh->GetSelectedFace())
+        if (figure_mesh_->GetSelectedFace())
         {
             selected_vertex.clear();
-            for (unsigned i = 0; i < _figure_mesh->GetSelectedFace()->vertices.size(); ++i)
+            for (unsigned i = 0; i < figure_mesh_->GetSelectedFace()->vertices.size(); ++i)
             {
                 selected_vertex.push_back(i);
             }
@@ -781,6 +824,31 @@ Vector3 REApplication::RotateAboutPoint(const Vector3& origin, const Vector3& pi
     return pivot + RotateVector((origin - pivot), axis, angle);
 }
 
+float REApplication::ScalarVectors(Vector3 a, Vector3 b)
+{
+    return a.x_*b.x_ + a.y_*b.y_ + a.z_*b.z_;
+}
+
+/*
+// t1,t2,t3 - вершины треугольника
+// l1,l2 - точки прямой (должны быть с разных сторон треугольника, иначе смысла не имеет)
+// p - точка пересечения прямой и треугольника
+// функция возвращает true в случае пересечения и false иначе, в p - точка пересечения
+bool REApplication::line_intersect_triangle(const Vector3& t1, const Vector3& t2, const Vector3& t3,
+    const Vector3& l1, const Vector3& l2, Vector3& p)
+{
+    Vector3 n = ((t2 - t1) ^ (t3 - t2)).normal();
+    float d1 = ((l1 - t1) & n) / n.length(), d2 = ((l2 - t1) & n) / n.length();
+    if ((d1 > 0 && d2 > 0) || (d1 < 0 && d2 < 0))
+        return false;
+    p = l1 + (l2 - l1) * (-d2 / (d2 - d1));
+    if (((t2 - t1) ^ (p - t1)) & n <= 0) return false;
+    if (((t3 - t2) ^ (p - t2)) & n <= 0) return false;
+    if (((t1 - t3) ^ (p - t3)) & n <= 0) return false;
+    return true;
+}
+*/
+
 void REApplication::HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData)
 {
     // If draw debug mode is enabled, draw viewport debug geometry. This time use depth test, as otherwise the result becomes
@@ -799,7 +867,7 @@ void REApplication::HandlePostRenderUpdate(StringHash eventType, VariantMap& eve
             }
         }
 
-        _figure_mesh->render(dbgRenderer);
+        figure_mesh_->render(dbgRenderer);
         for(unsigned i=0; i<cubes.size(); ++i)
         {
             cubes[i]->SetDirection(cameraNode_->GetDirection());
@@ -823,6 +891,38 @@ void REApplication::HandlePostRenderUpdate(StringHash eventType, VariantMap& eve
             dbgRenderer->AddPolygon(rect_pos[0], rect_pos[1], rect_pos[2], rect_pos[3], Color::GRAY, false);
         }
         dbgRenderer->AddCross(hitPos, 0.5f, Color::GREEN, true);
+
+        if (auto* face = figure_mesh_->GetSelectedFace())
+        {
+            //Ray ray(Vector3(1.64f, 2.17f, -1.415f), cameraNode_->GetDirection());
+            auto ray = cameraNode_->GetComponent<Camera>()->GetScreenRayFromMouse();
+
+            Vector3 n = face->normal;
+            Vector3 CA = face->vertices[0].position - ray.origin_;
+            float scm = ScalarVectors(n, CA);
+
+            /* normal
+            Vector3 v1(face->vertices[1].position-face->vertices[0].position);
+            Vector3 v2(face->vertices[2].position-face->vertices[0].position); 
+            v1.CrossProduct(v2).Normalize();
+            */
+            
+            float D = ScalarVectors(n, face->vertices[0].position);
+            
+            float t = -(D + ScalarVectors(n, ray.origin_)) / scm;
+            Vector3 pos2 = ray.origin_ + t * CA;
+            Vector3 CV = hitPos - ray.origin_;
+            float CN = ScalarVectors(CA, n);
+            float CM = ScalarVectors(CV, n);
+            float K = CN/CM;
+            Vector3 hit = CV * K;
+            dbgRenderer->AddLine(face->vertices[0].position, pos2, Color::YELLOW, true);
+            dbgRenderer->AddLine(pos2, pos2 + n, Color::GREEN, true);
+            //dbgRenderer->AddCross(hit, 0.5f, Color::YELLOW, false);
+
+        }
+
+        
     }
 }
 

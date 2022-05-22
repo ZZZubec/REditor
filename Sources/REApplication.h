@@ -39,6 +39,7 @@ private:
     void CreateVertexBufferFromFloatArray(int step, Texture2D* Displacement, int w, int h);
     SharedPtr<Model> CreateModel(const SharedPtr<VertexBuffer>& vertex_buffer, const SharedPtr<IndexBuffer>& index_buffer, int w, int h, int vertexCount);
 
+    void LoadResorces();
     /// Creates a scene. Only required to provide background color that is not black.
     void CreateScene();
 
@@ -79,6 +80,8 @@ private:
     ea::vector<Vector3> GetVerticesRect(const Redi::FFace& face, const Redi::FFace& next_face);
     Vector3 RotateVector(const Vector3& origin, const Vector3& axis, float angle);
     Vector3 RotateAboutPoint(const Vector3& origin, const Vector3& pivot, const Vector3& axis, float angle);
+
+    float ScalarVectors(Vector3 a, Vector3 b);
     void HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData);
 
     /// Scene.
@@ -111,13 +114,14 @@ private:
     Vector3 hitPos{Vector3::ZERO};
     Drawable* hitDrawable{nullptr};
     
-    ea::vector<Vector3> _vertices{};
-    ea::vector<unsigned> _indexes{};
-    Redi::EEditorMode _editor_mode;
+    ea::vector<Vector3> vertices_{};
+    ea::vector<unsigned> indexes_{};
+    Redi::EEditorMode editor_mode_;
 
-    Redi::Figure* _figure_mesh;
+    Redi::Figure* figure_mesh_;
     ea::vector<Node*> cubes;
 
     ea::vector<unsigned> selected_vertex;
     ea::vector<Material*> materials_;
+    Urho3D::Texture2D* ballTexture_;
 };
